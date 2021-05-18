@@ -1,0 +1,21 @@
+$TTL 86400      ; 1 day
+@       IN      SOA     ns.methridge.dev. root.methridge.dev. (
+                        {{ timestamp "unix" }} ;   serial number
+                        10800          ;   Refresh interval, every 3 hours
+                        3600           ;   Retry interval, every 30 minutes
+                        604800         ;   Expire after 1 week
+                        86400         ;    Minimum TTL of 1 day
+                )
+        IN      NS      ns.methridge.dev.
+        IN      MX      10      mail.methridge.dev.
+
+pridns           IN      A      200.200.100.100
+
+; --------------- A record ---------------
+{{- range services -}}
+{{ range service (printf "%s|any" .Name) }}
+{{ .Name }}     IN      A       {{ .Address}}
+
+{{- end -}}
+{{ end }}
+; --------------- A record end ---------------
