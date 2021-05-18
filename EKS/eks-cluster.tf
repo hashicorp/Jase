@@ -12,13 +12,13 @@ module "eks" {
 
   worker_groups = [
     {
-      name                          = "jona-test-group-1"
+      name                          = "jasonb-test-group-1"
       instance_type                 = "t2.small"
       asg_desired_capacity          = 2
       additional_security_group_ids = [aws_security_group.external_connection.id]
     },
     {
-      name                          = "jona-test-group-2"
+      name                          = "jasonb-test-group-2"
       instance_type                 = "t2.medium"
       additional_security_group_ids = [aws_security_group.external_connection.id]
       asg_desired_capacity          = 1
