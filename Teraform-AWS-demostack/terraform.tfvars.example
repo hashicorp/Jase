@@ -6,7 +6,7 @@
 # Base
 #####################
 TTL            = "72"
-owner          = "guybarros"
+owner          = "jasonb"
 servers        = "3"
 workers        = "3"
 enterprise     = true
@@ -31,9 +31,9 @@ cni_plugin_url = "https://github.com/containernetworking/plugins/releases/downlo
 primary_region        = "eu-west-2"
 secondary_region      = "eu-west-1"
 tertiary_region       = "ap-northeast-1"
-primary_namespace     = "EU-guystack"
-secondary_namespace   = "DE-guystack"
-tertiary_namespace    = "AP-guystack"
+primary_namespace     = "EU-jasonbstack"
+secondary_namespace   = "DE-jasonbstack"
+tertiary_namespace    = "AP-jasonbstack"
 instance_type_server  = "t2.medium"
 instance_type_worker  = "t2.medium"
 public_key            = "ssh-rsa AAAAB3NzaC1yc2E"
