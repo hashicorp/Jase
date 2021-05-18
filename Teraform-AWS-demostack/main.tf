@@ -30,7 +30,7 @@ data "terraform_remote_state" "dns" {
     hostname     = "app.terraform.io"
     organization = "emea-se-playground-2019"
     workspaces = {
-      name = "Guy-DNS-Zone"
+      name = "Jason-DNS-Zone"
     }
   } //network
 }
