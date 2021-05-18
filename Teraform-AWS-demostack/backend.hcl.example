@@ -1,6 +1,9 @@
- hostname     = "app.terraform.io"
-    organization = "<MY_ORG>"
+ terraform {
+  backend "remote" {
+    organization = "jasonb"
 
     workspaces {
-      name = ""<MY_WORKSPACE>"
+      name = "Jason-AWS-Demostack"
     }
+  }
+}
