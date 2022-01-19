@@ -1,7 +1,7 @@
 # Vaultbackend for Consul K8s 
 1. run
 ```
-helm install --upgrade -n vault --create-namespace -f vault-values.yaml --debug --wait vault hashicorp/vault
+helm install  -n vault --create-namespace -f vault-values.yaml --debug --wait vault hashicorp/vault
 ```
 2.  Export the vault server address
 ```
@@ -120,5 +120,128 @@ vault write auth/kubernetes/role/consul-ca \
 7. (the bellow assumes you have the enterprise license pre created as a secret)
 run 
 ```
-helm upgrade --install -n consul -f consul-values.yaml --debug --wait consul hashicorp/consul
+helm install -n consul -f consul-values.yaml --debug --wait consul hashicorp/consul
 ```
+
+vault-values.yaml
+
+server:
+  standalone:
+    enabled: true
+    config: |
+      ui = true
+      listener "tcp" {
+        tls_disable = 1
+        address = "[::]:8200"
+        cluster_address = "[::]:8201"
+      }
+      storage "file" {
+        path = "/vault/data"
+      }
+  service:
+    enabled: true
+  dataStorage:
+    enabled: true
+    size: 10Gi
+    storageClass: null
+    accessMode: ReadWriteOnce
+injector:
+  enabled: true
+  logLevel: "debug" 
+ui:
+  enabled: true
+  serviceType: LoadBalancer
+
+
+consul-values.yaml
+
+global:
+  datacenter: "dc1"
+  name: consul
+  domain: consul
+  image: hashicorp/consul-enterprise:1.11.1-ent
+  secretsBackend:
+    vault:
+      enabled: true
+      consulServerRole: consul-server
+      consulClientRole: consul-client
+      consulCARole: consul-ca
+      connectCA:
+        address: http://vault.vault:8200
+        rootPKIPath: connect-root/
+        intermediatePKIPath: connect-intermediate-dc1/
+  enterpriseLicense:
+    secretName: consul-ent-license
+    secretKey: key
+  adminPartitions:
+    enabled: true
+  tls:
+    enabled: true
+    enableAutoEncrypt: true
+    caCert:
+      secretName: "pki/cert/ca"
+    #httpsOnly: false
+  federation:
+    enabled: false
+    createFederationSecret: false
+  acls:
+    manageSystemACLs: true
+    #createReplicationToken: true
+  gossipEncryption:
+    #autoGenerate: true
+    secretName: consul/data/secret/gossip
+    secretKey: gossip
+  enableConsulNamespaces: true
+  # metrics:
+  #   enabled: true
+  #   enableAgentMetrics: true
+  #   enableGatewayMetrics: true
+server:
+  replicas: 1
+  exposeGossipAndRPCPorts: true
+  serverCert:
+    secretName: "pki/issue/consul-server"
+connectInject:
+  replicas: 1
+  enabled: true
+  transparentProxy:
+    defaultEnabled: true
+  # envoyExtraArgs: "--log-level debug"
+  consulNamespaces:
+    mirroringK8S: true
+  # metrics:
+  #   defaultEnableMerging: true
+  #   defaultPrometheusScrapePort: 20200
+  #   defaultPrometheusScrapePath: "/metrics"
+prometheus:
+  enabled: true
+controller:
+  enabled: true
+
+#not supported with the current vault backend
+meshGateway:
+  enabled: false
+  replicas: 1
+ingressGateways:
+  replicas: 1
+  enabled: enable
+  gateways:
+    - name: ingress-gateway
+      service:
+        type: LoadBalancer
+terminatingGateways:
+  replicas: 1
+  enabled: true
+  gateways:
+  - name: terminating-gateway
+ui:
+  service:
+    type: LoadBalancer
+  metrics:
+    provider: prometheus
+    baseURL: http://prometheus-server
+syncCatalog:
+  enabled: true
+  consulNamespaces:
+    mirroringK8S: true
+  k8sDenyNamespaces: ["kube-system", "kube-public", "consul"]
