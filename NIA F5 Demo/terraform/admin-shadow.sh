@@ -16,7 +16,7 @@ fi
 if [[ $use_python == 1 ]]; then
     echo "use python"
     #python3 -c "import crypt; print(crypt.crypt(\"$1\", crypt.mksalt(crypt.METHOD_SHA512)))" > admin.shadow
-    python -c "from passlib.hash import sha512_crypt; import getpass; print(sha512_crypt.using(rounds=5000).hash(\"$1\"))" > admin.shadow
+    python3 -c "from passlib.hash import sha512_crypt; import getpass; print(sha512_crypt.using(rounds=5000).hash(\"$1\"))" > admin.shadow
 else
     echo "use openssl"
    openssl passwd -6 -salt f5f5 $1 > admin.shadow    
