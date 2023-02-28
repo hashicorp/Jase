@@ -1,30 +1,21 @@
 global:
 # enabled: true
 # name: consul
-  apiVersion: v2
   datacenter: dc2
   image: hashicorp/consul-enterprise:1.14.4-ent
   imageEnvoy: "envoyproxy/envoy-alpine:v1.20.4"
-  imageK8S: docker.mirror.hashicorp.services/hashicorp/consul-k8s-control-plane:1.0.2
-  imageConsulDataplane: "hashicorp/consul-dataplane:1.0.0"
   enterpriseLicense:
     secretName: consul-ent-license
     secretKey: key
 
-  adminPartitions:
-    enabled: true
-    name: "default"
-    # name above is the partition name for servers to reside 	
-    service:
-      annotations: null
-
-  enableConsulNamespaces: true
-
   peering:
     enabled: true
 
-  gossipEncryption:
-    autoGenerate: true
+  adminPartitions:
+    enabled: true
+    name: "default"
+    
+  enableConsulNamespaces: true
 
   tls:
     enabled: true
@@ -32,18 +23,19 @@ global:
     verify: true
 
   acls:
-   manageSystemACLs: true
+    manageSystemACLs: true
 
 server:
   replicas: 3
   bootstrapExpect: 3
-  extraConfig: |
-    {
-      "log_level": "TRACE"
-    }
-
-client:
+  connect: true
   enabled: true
+  exposeGossipAndRPCPorts: true
+  
+  metrics:
+    enabled: true
+    enableAgentMetrics: true
+    agentMetricsRetentionTime: '1m'
 
 connectInject:
   enabled: true
@@ -56,27 +48,23 @@ ingressGateways:
         type: 'LoadBalancer'
   wanAddress:
     source: Service
-#       annotations: |
-#         'service.beta.kubernetes.io/aws-load-balancer-internal': "false"
+
+controller:
+  enabled: true
 
 meshGateway:
   enabled: true
   replicas: 1
-  service:
-    enabled: true
-    type: 'LoadBalancer'
-  wanAddress:
-    source: Service
-#       annotations: |
-#         'service.beta.kubernetes.io/aws-load-balancer-internal': "false"
+# service:
+#   enabled: true
+#   type: 'LoadBalancer'
+# wanAddress:
+#   source: Service
 
-metrics:
-  enabled: true
-  provider: "prometheus"
-  baseURL: http://prometheus-server
-
-controller:
-  enabled: true
+# metrics:
+#  enabled: true
+#  provider: "prometheus"
+#  baseURL: http://prometheus-server
 
 ui:
   enabled: true
