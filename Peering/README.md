@@ -79,6 +79,9 @@ files located in DC1/01-AP-default-default-failover/countingapp/
 kubectl apply -f dashboard.yaml --context $dc1
 kubectl apply -f counting.yaml --context $dc1
 ```
+![image](https://user-images.githubusercontent.com/81739850/221881212-5bc9696b-1bb9-44ed-8ca7-3ab5b28c4406.png)
+
+
 
 7. Using your browser, check the dashboard UI and confirm the number displayed is incrementing. 
    You can get the dashboard UI's EXTERNAL IP address with command below. Make sure to append port :9002 to the browser URL.  
@@ -92,6 +95,8 @@ kubectl get service dashboard --context $dc1
 NAME        TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)          AGE
 dashboard   LoadBalancer   10.0.179.160   40.88.218.67  9002:32696/TCP   22s
 ```
+
+![image](https://user-images.githubusercontent.com/81739850/221881398-042c9425-217a-4684-a16d-3e1872d1aea0.png)
 
 
 
