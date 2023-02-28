@@ -11,6 +11,11 @@ We will then observe how the dashboard will failover to the counting service res
 
 1. You have two Kubernetes clusters available. In this demo example, we will use Azure Kubernetes Service (AKS) but it can be applied to other K8s clusters.
 
+
+![image](https://user-images.githubusercontent.com/81739850/221880958-1a9170f5-13d4-463a-afdd-141ca191e173.png)
+
+
+
     Note: 
     - If using AKS, you can use the Kubenet CNI or the Azure CNI. The Consul control plane and data plane will use Load Balancers (via Consul mesh gateways)to communicate between Consul datacenters.
     - Since Load Balancers are used on both control plane and data plane, each datacenter can reside on different networks (VNETS, VPCs) or even different clouds (AWS, Azure GCP, private, etc). No direct network connections (ie peering connections) are required. 
