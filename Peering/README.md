@@ -250,6 +250,9 @@ kubectl apply -f counting.yaml --context $dc1
 
 # (Optional) Deploy Consul (dc3) on EKS Cluster and peer between dc1 as dc3.
 
+![image](https://user-images.githubusercontent.com/81739850/221881568-a6f11dc6-dacf-4f7b-9c8e-c570ebe822eb.png)
+
+
 
 This portion is optional if you want to failover to AWS Elastic Kubernetes Service (EKS).   
 We will create a peering connection between dc1 and dc3 (on EKS) and failover the counting service to dc3.
