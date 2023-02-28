@@ -2,7 +2,7 @@ global:
   enabled: true
   name: consul
   apiVersion: v2
-  datacenter: jason-dc1
+  datacenter: dc1
   image: hashicorp/consul-enterprise:1.14.4-ent
   imageEnvoy: "envoyproxy/envoy-alpine:v1.20.4"
   imageK8S: docker.mirror.hashicorp.services/hashicorp/consul-k8s-control-plane:1.0.2
