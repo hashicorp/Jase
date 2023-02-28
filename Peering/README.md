@@ -204,6 +204,10 @@ kubectl apply -f  dialer-dc2.yaml --context $dc2
 kubectl apply -f exportedsvc-counting.yaml --context $dc2
 ```
 
+![image](https://user-images.githubusercontent.com/81739850/221921004-c9a2196c-db2a-4bf2-8016-d25d1f44f755.png)
+
+
+
 16. Apply service-resolver file on dc1. This service-resolver.yaml file will tell Consul on dc1 how to handle failovers if the counting service fails locally. 
 
 Note: Make sure the name of the peer in the service-resolver file matches the name to gave for each peer when you established peering (either in the UI or using CRD acceptor and dialer files).
@@ -218,6 +222,9 @@ Note: The UI on Consul version 1.14 does not yet recognize peers for Intention c
 
 ```
 kubectl apply -f intentions.yaml --context $dc2
+
+![image](https://user-images.githubusercontent.com/81739850/221921140-574fcf03-166d-409d-a276-24e75c1bcf84.png)
+
 ```
 
 18. Apply the proxy-defaults on both datacenters to ensure data plane traffic goes via local mesh gateways 
@@ -237,6 +244,9 @@ kubectl delete -f counting.yaml --context $dc1
 
 **This is your current configuration:**  
 ![alt text](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/Screen%20Shot%202022-09-13%20at%205.13.46%20PM.png "Cluster Peering Demo")
+
+
+![image](https://user-images.githubusercontent.com/81739850/221921318-28751993-df61-416e-9469-6b51728b8c7c.png)
 
 
 21. Bring counting service on dc1 back up.
