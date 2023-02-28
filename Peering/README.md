@@ -378,3 +378,63 @@ kubectl delete -f counting.yaml --context $dc2
 13. Back on your browser, check the dashboard UI to see the counter has reset and is running.
 
 
+cluster-client-connectivity & failover-demo
+This demo will showcase the ability to connect a client kubernetes cluster into DC1 and failover services between two Consul clusters (default and partition1) that have been connected via consuld ataplane. 
+
+# Deploy Consul on client Kubernetes cluster to connect to kubernetes server cluster (dc1).
+
+1 If required there is a Terraform code to deploy a cluster ---> DC3/DC3-K8cluster
+
+2 You can run terraform plan and deploy within the directory to build a cluster will take several minutes
+
+3. Copy the server certificate to the non-default partition cluster running your workloads
+
+```
+kubectl get secret --namespace consul consul-ca-cert -o yaml | \
+kubectl --context arn:aws:eks:us-east-2:711129375688:cluster/<cluster name> apply --namespace consul -f -
+```
+
+4. Copy the server key to the non-default partition cluster running your workloads.
+
+```
+kubectl get secret --namespace consul consul-ca-key -o yaml | \
+kubectl --context arn:aws:eks:us-east-2:711129375688:cluster/<cluster name> apply --namespace consul -f -
+```
+5. If ACLs were enabled in the server configuration values file, copy the token to the non-default partition cluster running your workloads.
+
+```
+kubectl get secret --namespace consul consul-partitions-acl-token -o yaml | \
+kubectl --context arn:aws:eks:us-east-2:711129375688:cluster/<cluster name>  apply --namespace consul -f -
+
+```
+
+6. Find expose server in DC1 to establish connection from client cluster
+
+```
+kubectl get svc -n consul # on DC1
+
+NAME                             TYPE           CLUSTER-IP       EXTERNAL-IP                                                               PORT(S)
+consul-consul-expose-servers     LoadBalancer   172.20.230.215   a1fecfc8ccdd74b37b5273d7da904e79-1244336522.us-east-2.elb.amazonaws.com   8501:31424/TCP,8301:30094/TCP,8300:31439/TCP,8502:31755/TCP
+
+```
+
+7. find kubernetes master on the client side kubernetes cluster, place the master aputput into the k8sAuthMethodHost: 
+
+
+```
+kubectl cluster-info 
+
+Kubernetes master is running at https://6FA8E20A2D3D90DC7DFC6B39B761BE52.sk1.us-east-2.eks.amazonaws.com
+CoreDNS is running at https://6FA8E20A2D3D90DC7DFC6B39B761BE52.sk1.us-east-2.eks.amazonaws.com/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+```
+```
+helm install -f config.yaml consul hashicorp/apservice-dc3.yaml -n consul --debug
+
+kubectl get pods -n consul
+
+NAME                                 READY   STATUS      RESTARTS   AGE
+consul-consul-partition-init-zzmsz   0/1     Completed   0          3h52m
+
+```
+ 
