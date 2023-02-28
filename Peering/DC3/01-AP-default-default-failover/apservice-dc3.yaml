@@ -1,55 +1,39 @@
 global:
-# enabled: true
 # name: consul
-  datacenter: dc3
+  enabled: false
   image: hashicorp/consul-enterprise:1.14.4-ent
-  imageEnvoy: "envoyproxy/envoy-alpine:v1.20.4"
   enterpriseLicense:
     secretName: consul-ent-license
     secretKey: key
-
-  peering:
-    enabled: true
-
+ 
   adminPartitions:
     enabled: true
-    name: "default"
-    
+    name: partition-test
+
   enableConsulNamespaces: true
 
   tls:
     enabled: true
-    enableAutoEncrypt: true
-    verify: true
+    caCert:
+      secretName: consul-consul-ca-cert 
+      secretKey: tls.crt
+    caKey:
+      secretName: consul-consul-ca-key 
+      secretKey: tls.key
 
   acls:
     manageSystemACLs: true
+    bootstrapToken:
+      secretName: consul-consul-partitions-acl-token 
+      secretKey: token
 
-server:
-  replicas: 3
-  bootstrapExpect: 3
-  connect: true
+externalServers:
   enabled: true
-  exposeGossipAndRPCPorts: true
+  hosts: [a1fecfc8ccdd74b37b5273d7da904e79-1244336522.us-east-2.elb.amazonaws.com]
+  tlsServerName: server.dc1.consul
+  k8sAuthMethodHost: https://6FA8E20A2D3D90DC7DFC6B39B761BE52.sk1.us-east-2.eks.amazonaws.com
   
-  metrics:
-    enabled: true
-    enableAgentMetrics: true
-    agentMetricsRetentionTime: '1m'
-
-connectInject:
-  enabled: true
-
-ingressGateways:
-  enabled: true
-  gateways:
-    - name: ingress-gateway
-      service:
-        type: 'LoadBalancer'
-  wanAddress:
-    source: Service
-
-controller:
+controller: 
   enabled: true
 
 meshGateway:
@@ -60,17 +44,3 @@ meshGateway:
 #   type: 'LoadBalancer'
 # wanAddress:
 #   source: Service
-
-# metrics:
-#  enabled: true
-#  provider: "prometheus"
-#  baseURL: http://prometheus-server
-
-ui:
-  enabled: true
-  service:
-    enabled: true
-    type: LoadBalancer
-
-prometheus:
- enabled: true
