@@ -7,8 +7,6 @@ We will have another instance of the counting service running on dc2. We will si
 
 We will then observe how the dashboard will failover to the counting service residing on dc2.
 
-![alt text](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/Screen%20Shot%202022-09-13%20at%205.13.46%20PM.png "Cluster Peering Demo")
-
 # Pre-reqs
 
 1. You have two Kubernetes clusters available. In this demo example, we will use Azure Kubernetes Service (AKS) but it can be applied to other K8s clusters.
@@ -30,20 +28,11 @@ helm repo update hashicorp
   
 # Deploy Consul on first Kubernetes cluster (dc1).
 
+1 If required there is a Terraform code to deploy a cluster ---> DC1/DC1-K8cluster
 
+2 You can run terraform plan and deploy within the directory to build a cluster will take several minutes
 
-1. Clone this repo
-```
-git clone https://github.com/vanphan24/cluster-peering-failover-demo.git
-```
-
-2. Nagivate to the **cluster-peering-failover-demo/countingapp** folder. 
-
-```
-cd cluster-peering-failover-demo/countingapp
-```
-
-3. Set environemetal variables for kubernetes cluster dc1 and dc2
+3. Set environemetal variables for kubernetes cluster dc1 and dc2 (Optional)
 
 ```
 export dc1=<your-kubernetes context-for-dc1>
@@ -58,7 +47,7 @@ kubectl config use-context $dc1
 ``` 
 
 ```
-helm install $dc1 hashicorp/consul --version $VERSION --values consul-values.yaml                                  
+helm install $dc1 hashicorp/consul --version $VERSION --values config-dc1.yaml                                  
 ```
 
 5. Confirm Consul deployed sucessfully
@@ -81,6 +70,7 @@ helm upgrade $dc1 hashicorp/consul  --version $VERSION --values consul-values.ya
 
 6. Deploy both dashboard and counting service on dc1
 ```
+files located in DC1/01-AP-default-default-failover/countingapp/
 kubectl apply -f dashboard.yaml --context $dc1
 kubectl apply -f counting.yaml --context $dc1
 ```
@@ -99,34 +89,33 @@ dashboard   LoadBalancer   10.0.179.160   40.88.218.67  9002:32696/TCP   22s
 ```
 
 
-![alt text](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/dashboard-beofre.png)
-
-
-**This is your current configuration:**  
-![alt text](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/diagram-before2.png)
-
-
 
 # Deploy Consul on second Kubernetes cluster (dc2).
 
 
-8. Set context and deploy Consul on dc2
+8. Set context and deploy Consul on dc2 ----> Terraform files to build a cluser can be found in DC2/02-AP-diffAP-failover/DC2-K8cluster/
 
 ```
 kubectl config use-context $dc2
 ```
 ```
-helm install $dc2 hashicorp/consul --version $VERSION --values consul-values.yaml --set global.datacenter=dc2
+helm install $dc2 hashicorp/consul --version $VERSION --values config-dc2.yaml --set global.datacenter=dc2
 ```
 
-Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashicorp.com, peeringacceptors.consul.hashicorp.com, and peeringdialers.consul.hashicorp.com  exist.    
+Note: Run 
+
+```kubectl get crd``` 
+
+and make sure that exportedservices.consul.hashicorp.com, peeringacceptors.consul.hashicorp.com, and peeringdialers.consul.hashicorp.com  exist.    
 If not, you need to upgrade your helm deployment:  
 
 ```
-helm upgrade $dc2 hashicorp/consul  --version $VERSION --values consul-values.yaml
+helm upgrade $dc2 hashicorp/consul  --version $VERSION --values config-dc2.yaml
 ```
 
 9. Deploy counting service on dc2. This will be the failover service instance.
+
+files can be located in DC2/01-AP-default-default-failover/countingapp/
 
 ```
 kubectl apply -f counting.yaml --context $dc2
@@ -139,12 +128,16 @@ You can establish the peering connections using the Consul UI or using Kubernete
 
 10. If your Consul clusters are on different non-routable networks (no VPC/VPN peering), then you will need to set the Consul servers (control plane) to use mesh gateways to request/accept peering connection. Just apply the meshgw.yaml file on both Kubernetes cluster. 
 
+If you try to establish a peer and get the following error below you will need to deploy the mesh gateways
+
+![image](https://user-images.githubusercontent.com/81739850/221875916-728fd432-0539-4241-baf9-0b51f4508a77.png)
+
 
 ```
 kubectl apply -f meshgw.yaml --context $dc1
 kubectl apply -f meshgw.yaml --context $dc2
 ```
-
+You can either use the UI or configuration to setup peering, UI pretty straightforwad to follow
 
 **If you prefer to use the UI to establish the peered connection, the general steps are:**
   - Log onto Consul UI for dc1, navigate to the Peers side tab on the left hand side.
@@ -177,6 +170,8 @@ dc2    True     2m46s         2m47s
 ```
 
 Notice a secret called peering-token-dc2 is created.
+
+All files located in DC1/countingapp/
 ```
 kubectl get secrets --context $dc1
 ```
@@ -250,10 +245,10 @@ This portion is optional if you want to failover to AWS Elastic Kubernetes Servi
 We will create a peering connection between dc1 and dc3 (on EKS) and failover the counting service to dc3.
 This portion assumes you already have an Elastic Kubernetes Service (EKS) cluster deployed on AWS.  
 
-![image](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/Screen%20Shot%202022-09-22%20at%2011.02.29%20AM.png)
-
 
 1. Connect your local terminal to your EKS cluster.
+
+Terraform files can be located DC3/DC3-K8cluster to build a cluster
 
 ```
 aws eks --region <your-aws-region> update-kubeconfig --name <your-eks-cluster-name>
@@ -272,7 +267,7 @@ export dc3=<your EKS cluster context>
 kubectl config use-context $dc3
 ``` 
 ```
-helm install $dc3 hashicorp/consul --version $VERSION --values consul-values.yaml --set global.datacenter=dc3
+helm install $dc3 hashicorp/consul --version $VERSION --values apservice-dc3.yaml.yaml --set global.datacenter=dc3
 ```
   
 
@@ -280,7 +275,7 @@ Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashi
 	
 	If not, you need to upgrade your helm deployment:    
 	
-	```helm upgrade $dc3 hashicorp/consul --version $VERSION --values consul-values.yaml```
+	```helm upgrade $dc3 hashicorp/consul --version $VERSION --values apservice-dc3.yaml.yaml```
 
 5. A
 
