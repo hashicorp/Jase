@@ -223,11 +223,10 @@ Note: The UI on Consul version 1.14 does not yet recognize peers for Intention c
 ```
 kubectl apply -f intentions.yaml --context $dc2
 
-![image](https://user-images.githubusercontent.com/81739850/221921140-574fcf03-166d-409d-a276-24e75c1bcf84.png)
-
-![image](https://user-images.githubusercontent.com/81739850/221921640-36021b91-e219-430a-a2af-146afd6a5275.png)
-![image](https://user-images.githubusercontent.com/81739850/221921140-574fcf03-166d-409d-a276-24e75c1bcf84.png)
 ```
+
+![image](https://user-images.githubusercontent.com/81739850/221922179-a6fd37ff-0cda-44df-859b-8bf4edee09b2.png)
+
 
 18. Apply the proxy-defaults on both datacenters to ensure data plane traffic goes via local mesh gateways 
 ```
