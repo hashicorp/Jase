@@ -1,6 +1,6 @@
 global:
-  enabled: true
-  name: consul
+# enabled: true
+# name: consul
   apiVersion: v2
   datacenter: dc1
   image: hashicorp/consul-enterprise:1.14.4-ent
