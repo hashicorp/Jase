@@ -1,0 +1,79 @@
+global:
+  enabled: true
+  name: consul
+
+  image: hashicorp/consul-enterprise:1.14.4-ent
+  enterpriseLicense:
+    secretName: consul-ent-license
+    secretKey: key
+
+  adminPartitions:
+    enabled: true
+    name: "default"
+    
+  enableConsulNamespaces: true
+
+  peering:
+    enabled: true
+
+  tls:
+    enabled: true
+    enableAutoEncrypt: true
+    verify: true
+
+  acls:
+    manageSystemACLs: true
+
+server:
+  replicas: 3
+  bootstrapExpect: 3
+  connect: true
+  enabled: true
+  exposeGossipAndRPCPorts: true
+  extraConfig: |
+    {
+      "log_level": "TRACE"
+    }
+
+  metrics:
+    enabled: true
+    enableAgentMetrics: true
+    agentMetricsRetentionTime: '1m'
+
+connectInject:
+  enabled: true
+
+ingressGateways:
+  enabled: true
+  gateways:
+    - name: ingress-gateway
+      service:
+        type: 'LoadBalancer'
+  wanAddress:
+    source: Service
+
+controller:
+  enabled: true
+
+meshGateway:
+  enabled: true
+  replicas: 1
+  service:
+    enabled: true
+    type: 'LoadBalancer'
+# wanAddress:
+#   source: Service
+
+metrics:
+  enabled: true
+  provider: "prometheus"
+  baseURL: http://prometheus-server
+
+ui:
+  enabled: true
+  service:
+    enabled: true
+    type: LoadBalancer
+
+prometheus:
+ enabled: true
