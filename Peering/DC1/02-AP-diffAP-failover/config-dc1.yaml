@@ -1,12 +1,8 @@
 global:
   enabled: true
   name: consul
-  apiVersion: v2
-  datacenter: dc1
+
   image: hashicorp/consul-enterprise:1.14.4-ent
-  imageEnvoy: "envoyproxy/envoy-alpine:v1.20.4"
-  imageK8S: docker.mirror.hashicorp.services/hashicorp/consul-k8s-control-plane:1.0.2
-  imageConsulDataplane: "hashicorp/consul-dataplane:1.0.0"
   enterpriseLicense:
     secretName: consul-ent-license
     secretKey: key
@@ -14,41 +10,34 @@ global:
   adminPartitions:
     enabled: true
     name: "default"
-    # name above is the partition name for servers to reside 	
-    service:
-      type: LoadBalancer
-      annotations: null
-
+    
   enableConsulNamespaces: true
 
   peering:
     enabled: true
 
-  gossipEncryption:
-    autoGenerate: true
-
   tls:
     enabled: true
-#   httpsOnly: false
     enableAutoEncrypt: true
     verify: true
 
   acls:
-   manageSystemACLs: true
+    manageSystemACLs: true
 
 server:
   replicas: 3
   bootstrapExpect: 3
   connect: true
   enabled: true
-# exposeGossipAndRPCPorts: true
+  exposeGossipAndRPCPorts: true
   extraConfig: |
     {
       "log_level": "TRACE"
     }
-
-client:
-  enabled: true
+  metrics:
+    enabled: true
+    enableAgentMetrics: true
+    agentMetricsRetentionTime: '1m'
 
 connectInject:
   enabled: true
@@ -61,8 +50,9 @@ ingressGateways:
         type: 'LoadBalancer'
   wanAddress:
     source: Service
-#       annotations: |
-#         'service.beta.kubernetes.io/aws-load-balancer-internal': "false"
+
+controller:
+  enabled: true
 
 meshGateway:
   enabled: true
@@ -70,18 +60,13 @@ meshGateway:
   service:
     enabled: true
     type: 'LoadBalancer'
-  wanAddress:
-    source: Service
-#       annotations: |
-#         'service.beta.kubernetes.io/aws-load-balancer-internal': "false"
+# wanAddress:
+#   source: Service
 
 metrics:
   enabled: true
   provider: "prometheus"
   baseURL: http://prometheus-server
-
-controller:
-  enabled: true
 
 ui:
   enabled: true
