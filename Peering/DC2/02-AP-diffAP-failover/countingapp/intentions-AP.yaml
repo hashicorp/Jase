@@ -1,0 +1,13 @@
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: counting-allow-partition-workload
+spec:
+  destination:
+    name: counting     # in partion called partition-workload
+  sources:
+   - name: dashboard
+     action: allow
+     partition: "default"  # dashboard in default admin partition
+
+

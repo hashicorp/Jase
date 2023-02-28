@@ -1,0 +1,13 @@
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ExportedServices
+metadata:
+  name: partition-workload
+spec:
+  services:
+  - name: counting
+    consumers:
+    - partition: default
+  - name: counting
+    namespace: default
+    consumers:
+    - partition: default

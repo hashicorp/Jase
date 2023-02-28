@@ -1,0 +1,19 @@
+# Required for the ingress gateway
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceDefaults
+metadata:
+  name: dashboard
+spec:
+  protocol: http
+  upstreamConfig:
+    defaults:
+      meshGateway:
+        mode: local
+      limits:
+        maxConnections: 512
+        maxPendingRequests: 512
+        maxConcurrentRequests: 512
+    overrides:
+      - name: counting
+        meshGateway:
+          mode: local

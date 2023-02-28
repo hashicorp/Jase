@@ -1,0 +1,8 @@
+# Required for the ingress gateway
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: service-defaults
+MeshGateway:
+- Mode: local
+Name: dashboard
+# spec:
+# protocol: http

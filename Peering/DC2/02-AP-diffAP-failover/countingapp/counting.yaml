@@ -1,0 +1,62 @@
+# Mock Counting Backend
+apiVersion: v1
+kind: Service
+metadata:
+  name: counting
+spec:
+  selector:
+    app: counting
+  ports:
+  - name: http
+    protocol: TCP
+    port: 9001
+    targetPort: 9001
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: counting
+---
+# deployment for counting
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: counting
+  labels:
+    app: counting
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: counting
+  template:
+    metadata:
+      labels:
+        app: counting
+      annotations:
+        "consul.hashicorp.com/connect-inject": "true"
+        "consul.hashicorp.com/transparent-proxy": "false"
+    spec:
+      serviceAccountName: counting
+      containers:
+      - name: counting
+        image: hashicorp/http-echo
+        ports:
+        - containerPort: 9001
+        args:
+        - -listen=0.0.0.0:9001
+        - -text={"count":999,"hostname":"mock-counting-service"}
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceDefaults
+metadata:
+  name: counting
+spec:
+  protocol: "http"
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceResolver
+metadata:
+  name: counting
+spec:
+  connectTimeout: 10s
