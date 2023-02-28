@@ -16,16 +16,11 @@ global:
     name: "default"
     # name above is the partition name for servers to reside 	
     service:
-#     type: LoadBalancer
-      annotations: null
 
   enableConsulNamespaces: true
 
   peering:
     enabled: true
-
-  gossipEncryption:
-    autoGenerate: true
 
   tls:
     enabled: true
@@ -38,13 +33,17 @@ global:
 server:
   replicas: 3
   bootstrapExpect: 3
+  connect: true
+  enabled: true
+  exposeGossipAndRPCPorts: true
   extraConfig: |
     {
       "log_level": "TRACE"
     }
-
-client:
-  enabled: true
+  metrics:
+    enabled: true
+    enableAgentMetrics: true
+    agentMetricsRetentionTime: '1m'
 
 connectInject:
   enabled: true
@@ -63,11 +62,11 @@ ingressGateways:
 meshGateway:
   enabled: true
   replicas: 1
-  service:
-    enabled: true
-    type: 'LoadBalancer'
-  wanAddress:
-    source: Service
+# service:
+#   enabled: true
+#   type: 'LoadBalancer'
+# wanAddress:
+#   source: Service
 #       annotations: |
 #         'service.beta.kubernetes.io/aws-load-balancer-internal': "false"
 
