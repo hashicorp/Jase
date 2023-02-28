@@ -13,14 +13,14 @@ module "eks" {
 
   worker_groups = [
     {
-      name                          = "jaseb-group-1"
+      name                          = "cluster3-group-1"
       instance_type                 = "t2.small"
       additional_userdata           = "echo foo bar"
       additional_security_group_ids = [aws_security_group.worker_group_mgmt_one.id]
       asg_desired_capacity          = 2
     },
     {
-      name                          = "jaseb-group-2"
+      name                          = "cluster3-group-2"
       instance_type                 = "t2.medium"
       additional_userdata           = "echo foo bar"
       additional_security_group_ids = [aws_security_group.worker_group_mgmt_two.id]
