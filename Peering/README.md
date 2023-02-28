@@ -255,6 +255,7 @@ kubectl delete -f counting.yaml --context $dc1
 ```
 kubectl apply -f counting.yaml --context $dc1
 ```
+![image](https://user-images.githubusercontent.com/81739850/221921950-3a5b5d38-496c-4ead-92c2-7d044a9623c3.png)
 
 
 22. Observe the dashboard service on your browser. Notice the the dashboard URL shows the counter has restarted again since it automatically fails back to the original service on dc1.
