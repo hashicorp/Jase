@@ -1,0 +1,42 @@
+global:
+  image: hashicorp/consul-enterprise:1.14.4-ent
+  enterpriseLicense:
+    secretName: consul-ent-license
+    secretKey: key
+
+  peering:
+    enabled: true
+
+  adminPartitions:
+    enabled: true
+    name: "default"
+
+  enableConsulNamespaces: true
+
+  tls:
+    enabled: true
+    enableAutoEncrypt: true
+    verify: true
+
+  acls:
+    manageSystemACLs: true
+
+server:
+  replicas: 1
+  bootstrapExpect: 1
+
+connectInject:
+  enabled: true
+
+meshGateway:
+  enabled: true
+  replicas: 1
+
+controller:
+  enabled: true
+
+ui:
+  enabled: true
+  service:
+    enabled: true
+    type: LoadBalancer
