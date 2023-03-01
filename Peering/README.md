@@ -1,5 +1,25 @@
 # cluster-peering-failover-demo
 
+DIRECTORY INDEX.
+
+Peering of DCs
+
+Helm chart in the DC1 directory and the config files are all in DC1/01-AP-default-default-failover/countingapp
+Helm chart in the DC2 directory and the config files are all in DC2/01-AP-default-default-failover/countingapp
+
+DC1 configuration -----> DC1/01-AP-default-default-failover/
+DC2 configuration -----> DC2/01-AP-default-default-failover/
+
+Admin Partition on client clusters
+
+Helm chart in the DC1 directory and the config files are all in DC1/02-AP-diffAP-failover/countingapp
+Helm chart in the DC2 directory and the config files are all in DC2/02-AP-diffAP-failover/countingapp
+
+DC1 configuration -----> DC1/02-AP-diffAP-failover/
+DC2 configuration -----> DC2/02-AP-diffAP-failover/
+DC3 configuration -----> DC3/01-AP-default-default-failover/
+
+
 This demo will showcase the ability to failover services between two Consul datacenters (dc1 and dc2) that have been connected via Cluster peering. 
 We will deploy a counting app where a dashboard service will connect to the upstream counting service. Both services will reside on dc1.
 
@@ -50,7 +70,7 @@ export VERSION=1.0.0
 ```
 kubectl config use-context $dc1
 ``` 
-
+cd DC1/01-AP-default-default-failover/
 ```
 helm install $dc1 hashicorp/consul --version $VERSION --values config-dc1.yaml                                  
 ```
@@ -72,6 +92,7 @@ If not, you need to upgrade your helm deployment:
 ```
 helm upgrade $dc1 hashicorp/consul  --version $VERSION --values consul-values.yaml
 ```
+cd DC1/01-AP-default-default-failover/countingapp
 
 6. Deploy both dashboard and counting service on dc1
 ```
