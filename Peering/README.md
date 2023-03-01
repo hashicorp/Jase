@@ -69,9 +69,20 @@ export VERSION=1.0.0
 
 ```
 kubectl config use-context $dc1
+
+create consul namespace
+
+```
+kubectl create namespace consul                                
+```
+
+deploy license file into the consul namespace as shown below
 ``` 
 cd DC1/01-AP-default-default-failover/
+
 ```
+kubectl create secret generic consul-ent-license --namespace consul --from-literal=key="$consul.hclic"
+
 helm install $dc1 hashicorp/consul --version $VERSION --values config-dc1.yaml                                  
 ```
 
@@ -90,7 +101,7 @@ Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashi
 If not, you need to upgrade your helm deployment:  
     
 ```
-helm upgrade $dc1 hashicorp/consul  --version $VERSION --values consul-values.yaml
+helm upgrade $dc1 hashicorp/consul  --version $VERSION --values config-dc1.yaml
 ```
 cd DC1/01-AP-default-default-failover/countingapp
 
@@ -126,8 +137,22 @@ dashboard   LoadBalancer   10.0.179.160   40.88.218.67  9002:32696/TCP   22s
 
 8. Set context and deploy Consul on dc2 ----> Terraform files to build a cluser can be found in DC2/02-AP-diffAP-failover/DC2-K8cluster/
 
+install license also into the consul namespace
+
+create consul namespace
+
+```
+kubectl create namespace consul                                
+```
+
+deploy license file into the consul namespace as shown below
+
+```
+kubectl create secret generic consul-ent-license --namespace consul --from-literal=key="$consul.hclic"
+
 ```
 kubectl config use-context $dc2
+
 ```
 ```
 helm install $dc2 hashicorp/consul --version $VERSION --values config-dc2.yaml --set global.datacenter=dc2
@@ -407,6 +432,22 @@ This demo will showcase the ability to connect a client kubernetes cluster into 
 1 If required there is a Terraform code to deploy a cluster ---> DC3/DC3-K8cluster
 
 2 You can run terraform plan and deploy within the directory to build a cluster will take several minutes
+
+On DC3 create namespace and enterprise license into the consul namespace first
+
+create consul namespace
+
+```
+kubectl create namespace consul                                
+```
+
+deploy license file into the consul namespace as shown below
+
+``` 
+kubectl create secret generic consul-ent-license --namespace consul --from-literal=key="$consul.hclic"
+
+```
+Switch to DC1 contect 
 
 3. Copy the server certificate to the non-default partition cluster running your workloads
 
