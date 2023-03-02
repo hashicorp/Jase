@@ -5,9 +5,11 @@ DIRECTORY INDEX.
 Peering of DCs
 
 Helm chart in the DC1 directory and the config files are all in DC1/01-AP-default-default-failover/countingapp
+
 Helm chart in the DC2 directory and the config files are all in DC2/01-AP-default-default-failover/countingapp
 
 DC1 configuration -----> DC1/01-AP-default-default-failover/
+
 DC2 configuration -----> DC2/01-AP-default-default-failover/
 
 Admin Partition on client clusters
