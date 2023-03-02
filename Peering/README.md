@@ -142,22 +142,21 @@ dashboard   LoadBalancer   10.0.179.160   40.88.218.67  9002:32696/TCP   22s
 
 8. Set context and deploy Consul on dc2 ----> Terraform files to build a cluser can be found in DC2/02-AP-diffAP-failover/DC2-K8cluster/
 
-install license also into the consul namespace
+Install license also into the consul namespace
 
-create consul namespace
+Create consul namespace
 
 ```
 kubectl create namespace consul                                
 ```
 
-deploy license file into the consul namespace as shown below
+Deploy license file into the consul namespace as shown below
 
 ```
 kubectl create secret generic consul-ent-license --namespace consul --from-literal=key="$consul.hclic"
-
+```
 ```
 kubectl config use-context $dc2
-
 ```
 ```
 helm install $dc2 hashicorp/consul --version $VERSION --values config-dc2.yaml --set global.datacenter=dc2
@@ -165,7 +164,9 @@ helm install $dc2 hashicorp/consul --version $VERSION --values config-dc2.yaml -
 
 Note: Run 
 
-```kubectl get crd``` 
+```
+kubectl get crd
+``` 
 
 and make sure that exportedservices.consul.hashicorp.com, peeringacceptors.consul.hashicorp.com, and peeringdialers.consul.hashicorp.com  exist.    
 If not, you need to upgrade your helm deployment:  
@@ -504,4 +505,3 @@ NAME                                 READY   STATUS      RESTARTS   AGE
 consul-consul-partition-init-zzmsz   0/1     Completed   0          3h52m
 
 ```
- 
