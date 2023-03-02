@@ -8,7 +8,7 @@ global:
  
   adminPartitions:
     enabled: true
-    name: partition-test
+    name: partition-two
 
   enableConsulNamespaces: true
 
