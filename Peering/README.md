@@ -15,10 +15,13 @@ DC2 configuration -----> DC2/01-AP-default-default-failover/
 Admin Partition on client clusters
 
 Helm chart in the DC1 directory and the config files are all in DC1/02-AP-diffAP-failover/countingapp
+
 Helm chart in the DC2 directory and the config files are all in DC2/02-AP-diffAP-failover/countingapp
 
 DC1 configuration -----> DC1/02-AP-diffAP-failover/
+
 DC2 configuration -----> DC2/02-AP-diffAP-failover/
+
 DC3 configuration -----> DC3/01-AP-default-default-failover/
 
 
