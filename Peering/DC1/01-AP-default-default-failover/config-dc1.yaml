@@ -31,8 +31,8 @@ global:
    manageSystemACLs: true
 
 server:
-  replicas: 3
-  bootstrapExpect: 3
+  replicas: 3  # 1 for MiniKube or small environments
+  bootstrapExpect: 3 # 1 for as above environment
   connect: true
   enabled: true
   exposeGossipAndRPCPorts: true
