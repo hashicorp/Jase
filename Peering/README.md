@@ -191,7 +191,7 @@ You can establish the peering connections using the Consul UI or using Kubernete
 
 If you try to establish a peer and get the following error below you will need to deploy the mesh gateways
 
-![image](https://user-images.githubusercontent.com/81739850/221875916-728fd432-0539-4241-baf9-0b51f4508a77.png)
+![image](https://user-images.githubusercontent.com/81739850/223142210-03470b91-a419-455f-ae30-a2eaffe1f4fb.png)
 
 
 ```
@@ -255,7 +255,7 @@ kubectl apply -f  dialer-dc2.yaml --context $dc2
 kubectl apply -f exportedsvc-counting.yaml --context $dc2
 ```
 
-![image](https://user-images.githubusercontent.com/81739850/221921004-c9a2196c-db2a-4bf2-8016-d25d1f44f755.png)
+![image](https://user-images.githubusercontent.com/81739850/223142441-eb83fd5c-4ec7-4ee6-b832-12412b96d50e.png)
 
 
 
@@ -278,6 +278,9 @@ kubectl apply -f intentions.yaml --context $dc2
 
 ![image](https://user-images.githubusercontent.com/81739850/221922179-a6fd37ff-0cda-44df-859b-8bf4edee09b2.png)
 
+![image](https://user-images.githubusercontent.com/81739850/223142747-3a8c5bf8-3b6e-48fa-b420-a2046b1def5f.png)
+
+
 
 18. Apply the proxy-defaults on both datacenters to ensure data plane traffic goes via local mesh gateways 
 ```
@@ -295,8 +298,8 @@ kubectl delete -f counting.yaml --context $dc1
 
 **This is your current configuration:**  
 
+![image](https://user-images.githubusercontent.com/81739850/223142917-85385b47-b3fa-4474-86dc-19af4d204ef2.png)
 
-![image](https://user-images.githubusercontent.com/81739850/221921318-28751993-df61-416e-9469-6b51728b8c7c.png)
 
 
 21. Bring counting service on dc1 back up.
