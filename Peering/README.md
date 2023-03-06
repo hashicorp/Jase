@@ -157,9 +157,7 @@ kubectl create secret generic consul-ent-license --namespace consul --from-liter
 
 ```
 kubectl config use-context $dc2
-```
 
-```
 helm install $dc2 hashicorp/consul --version $VERSION --values config-dc2.yaml --set global.datacenter=dc2
 ```
 
