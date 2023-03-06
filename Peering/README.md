@@ -178,12 +178,9 @@ helm upgrade $dc2 hashicorp/consul  --version $VERSION --values config-dc2.yaml
 
 files can be located in DC2/01-AP-default-default-failover/countingapp/
 
-
 ```
 kubectl apply -f counting.yaml --context $dc2
 ```
-
-
 # Create cluster peering connection
 
 You can establish the peering connections using the Consul UI or using Kubernetes CRDs. The steps using the UI are extremely easy and straight forward so we will focus on using the Kubernetes CRDs in this section.
@@ -274,7 +271,6 @@ Note: The UI on Consul version 1.14 does not yet recognize peers for Intention c
 
 ```
 kubectl apply -f intentions.yaml --context $dc2
-
 ```
 
 
