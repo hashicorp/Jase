@@ -292,10 +292,8 @@ kubectl delete -f counting.yaml --context $dc1
 
 20. Observe the dashboard service on your browser. You should notice that the counter has restarted since the dashboard is connecting to different counting service instance.
 
-![alt text](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/dashboard-failover.png)
 
 **This is your current configuration:**  
-![alt text](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/Screen%20Shot%202022-09-13%20at%205.13.46%20PM.png "Cluster Peering Demo")
 
 
 ![image](https://user-images.githubusercontent.com/81739850/221921318-28751993-df61-416e-9469-6b51728b8c7c.png)
