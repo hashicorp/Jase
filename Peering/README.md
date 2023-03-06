@@ -158,12 +158,15 @@ kubectl create secret generic consul-ent-license --namespace consul --from-liter
 
 kubectl config use-context $dc2
 
-helm install $dc2 hashicorp/consul --version $VERSION --values config-dc2.yaml --set global.datacenter=dc2
+```
+helm install $dc2 hashicorp/consul --version $VERSION --values config-dc2.yaml --set global.datacenter=dc2                              
 ```
 
 Note: Run 
 
-```kubectl get crd``` 
+```
+kubectl get crd`                           
+```
 
 and make sure that exportedservices.consul.hashicorp.com, peeringacceptors.consul.hashicorp.com, and peeringdialers.consul.hashicorp.com  exist.    
 If not, you need to upgrade your helm deployment:  
