@@ -193,7 +193,6 @@ If you try to establish a peer and get the following error below you will need t
 
 ![image](https://user-images.githubusercontent.com/81739850/223142210-03470b91-a419-455f-ae30-a2eaffe1f4fb.png)
 
-
 ```
 kubectl apply -f meshgw.yaml --context $dc1
 kubectl apply -f meshgw.yaml --context $dc2
