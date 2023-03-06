@@ -157,8 +157,8 @@ kubectl create secret generic consul-ent-license --namespace consul --from-liter
 
 ```
 kubectl config use-context $dc2
-
 ```
+
 ```
 helm install $dc2 hashicorp/consul --version $VERSION --values config-dc2.yaml --set global.datacenter=dc2
 ```
@@ -178,6 +178,7 @@ helm upgrade $dc2 hashicorp/consul  --version $VERSION --values config-dc2.yaml
 
 files can be located in DC2/01-AP-default-default-failover/countingapp/
 
+
 ```
 kubectl apply -f counting.yaml --context $dc2
 ```
@@ -187,16 +188,17 @@ kubectl apply -f counting.yaml --context $dc2
 
 You can establish the peering connections using the Consul UI or using Kubernetes CRDs. The steps using the UI are extremely easy and straight forward so we will focus on using the Kubernetes CRDs in this section.
 
-10. If your Consul clusters are on different non-routable networks (no VPC/VPN peering), then you will need to set the Consul servers (control plane) to use mesh gateways to request/accept peering connection. Just apply the meshgw.yaml file on both Kubernetes cluster. 
+10.  If your Consul clusters are on different non-routable networks (no VPC/VPN peering), then you will need to set the Consul servers (control plane) to use mesh gateways to request/accept peering connection. Just apply the meshgw.yaml file on both Kubernetes cluster. 
 
 If you try to establish a peer and get the following error below you will need to deploy the mesh gateways
-
-![image](https://user-images.githubusercontent.com/81739850/223142210-03470b91-a419-455f-ae30-a2eaffe1f4fb.png)
 
 ```
 kubectl apply -f meshgw.yaml --context $dc1
 kubectl apply -f meshgw.yaml --context $dc2
 ```
+
+![image](https://user-images.githubusercontent.com/81739850/223142210-03470b91-a419-455f-ae30-a2eaffe1f4fb.png)
+
 You can either use the UI or configuration to setup peering, UI pretty straightforwad to follow
 
 **If you prefer to use the UI to establish the peered connection, the general steps are:**
