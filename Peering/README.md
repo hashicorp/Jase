@@ -153,9 +153,9 @@ kubectl create namespace consul
 deploy license file into the consul namespace as shown below
 
 ```
-kubectl create secret generic consul-ent-license --namespace consul --from-literal=key="$consul.hclic"
-
+kubectl create secret generic consul-ent-license --namespace consul --from-literal=key="$consul.hclic"                               
 ```
+
 kubectl config use-context $dc2
 
 helm install $dc2 hashicorp/consul --version $VERSION --values config-dc2.yaml --set global.datacenter=dc2
