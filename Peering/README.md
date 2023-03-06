@@ -165,7 +165,7 @@ helm install $dc2 hashicorp/consul --version $VERSION --values config-dc2.yaml -
 Note: Run 
 
 ```
-kubectl get crd`                           
+kubectl get crd                         
 ```
 
 and make sure that exportedservices.consul.hashicorp.com, peeringacceptors.consul.hashicorp.com, and peeringdialers.consul.hashicorp.com  exist.    
