@@ -430,11 +430,13 @@ This demo will showcase the ability to connect a client kubernetes cluster into 
 
 # Deploy Consul on client Kubernetes cluster to connect to kubernetes server cluster (dc1).
 
-1 If required there is a Terraform code to deploy a cluster ---> DC3/DC3-K8cluster
+1 If required there is a Terraform code to deploy a cluster ---> /DC3-K8cluster
 
 2 You can run terraform plan and deploy within the directory to build a cluster will take several minutes
 
-On DC3 create namespace and enterprise license into the consul namespace first
+cd /DC2/02-AP-diffAP-failover
+
+On DC2 create namespace and enterprise license into the consul namespace first
 
 create consul namespace
 
