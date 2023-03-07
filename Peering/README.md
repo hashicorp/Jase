@@ -62,6 +62,13 @@ helm repo update hashicorp
 
 2 You can run terraform plan and deploy within the directory to build a cluster will take several minutes
 
+Run the following command to retrieve the access credentials for your cluster and automatically configure kubectl.
+
+```aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)```
+
+
+You can then run the command kubectl cluster-info to verify you are connected to your Kubernetes cluster:
+
 3. Set environemetal variables for kubernetes cluster dc1 and dc2 (Optional)
 
 ```
@@ -141,6 +148,13 @@ dashboard   LoadBalancer   10.0.179.160   40.88.218.67  9002:32696/TCP   22s
 
 
 8. Set context and deploy Consul on dc2 ----> Terraform files to build a cluser can be found in DC2/02-AP-diffAP-failover/DC2-K8cluster/
+
+Run the following command to retrieve the access credentials for your cluster and automatically configure kubectl.
+
+```aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)```
+
+You can then run the command kubectl cluster-info to verify you are connected to your Kubernetes cluster:
+
 
 install license also into the consul namespace
 
