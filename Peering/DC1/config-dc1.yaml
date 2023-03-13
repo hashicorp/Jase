@@ -38,12 +38,6 @@ server:
   replicas: 3 # 1 for MiniKube and small environment
   bootstrapExpect: 3 # 1 for MiniKube and small environment
   exposeGossipAndRPCPorts: true
-
-  extraConfig: |
-    {
-      "log_level": "TRACE"
-    }
-
   metrics:
     enabled: true
     enableAgentMetrics: true
