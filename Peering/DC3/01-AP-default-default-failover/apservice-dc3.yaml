@@ -1,5 +1,5 @@
 global:
-# name: consul
+  name: consul
   enabled: false
   image: hashicorp/consul-enterprise:1.14.4-ent
   logLevel: "debug"
