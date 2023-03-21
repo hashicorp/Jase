@@ -1,10 +1,12 @@
 global:
-# enabled: true
-# name: consul
+  enabled: true
+  name: consul
   apiVersion: v2
   datacenter: dc1
   image: hashicorp/consul-enterprise:1.14.4-ent
   imageEnvoy: "envoyproxy/envoy-alpine:v1.20.4"
+  imageConsulDataplane: "hashicorp/consul-dataplane:1.1.0"
+  logLevel: "debug"
   enterpriseLicense:
     secretName: consul-ent-license
     secretKey: key
@@ -41,6 +43,16 @@ server:
 
 connectInject:
   enabled: true
+  default: false                 # Default
+  transparentProxy:
+    defaultEnabled: true         # Default
+  consulNamespaces:
+    consulDestinationNamespace: "default"   # Ignored when mirroringK8S is true
+    mirroringK8S: true
+#   mirroringK8SPrefix: ""
+  metrics:
+    defaultEnabled: true
+    defaultEnableMerging: false  
 
 ingressGateways:
   enabled: true
