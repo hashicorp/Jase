@@ -1,40 +1,74 @@
 global:
-# name: consul
+  name: consul
   enabled: false
   image: hashicorp/consul-enterprise:1.14.4-ent
+  imageEnvoy: "envoyproxy/envoy-alpine:v1.20.4"
+  imageConsulDataplane: "hashicorp/consul-dataplane:1.1.0"
+  logLevel: "debug"
   enterpriseLicense:
     secretName: consul-ent-license
     secretKey: key
  
   adminPartitions:
     enabled: true
-    name: partition-one
+    name: tenant-1
 
   enableConsulNamespaces: true
 
   tls:
     enabled: true
     caCert:
-      secretName: consul-consul-ca-cert 
+      secretName: consul-ca-cert 
       secretKey: tls.crt
     caKey:
-      secretName: consul-consul-ca-key 
+      secretName: consul-ca-key 
       secretKey: tls.key
 
   acls:
     manageSystemACLs: true
     bootstrapToken:
-      secretName: consul-consul-partitions-acl-token 
+      secretName: consul-partitions-acl-token 
       secretKey: token
+
+client:
+  enabled: false
+  grpc: true
 
 externalServers:
   enabled: true
-  hosts: [a1fecfc8ccdd74b37b5273d7da904e79-1244336522.us-east-2.elb.amazonaws.com]
+  hosts: [ab50a4cc9bfd84dfab0ea6c34cfced8f-951434048.eu-west-1.elb.amazonaws.com]
   tlsServerName: server.dc1.consul
-  k8sAuthMethodHost: https://6FA8E20A2D3D90DC7DFC6B39B761BE52.sk1.us-east-2.eks.amazonaws.com
+  k8sAuthMethodHost: https://C637ADFBC7E786F56A70BFA0B9E924D8.yl4.eu-west-1.eks.amazonaws.com
   
 controller: 
   enabled: true
+
+connectInject:
+  consulNamespaces:
+    mirroringK8S: true
+  enabled: true
+  default: true                 # Default
+  logLevel: "debug"
+  transparentProxy:
+    defaultEnabled: true         # Default
+
+
+ingressGateways:
+  enabled: true
+  gateways:
+    - name: ingress-gateway
+      service:
+        ports:
+        - nodePort: null
+          port: 443
+        - nodePort: null
+          port: 8080
+        type: 'LoadBalancer'
+        
+# wanAddress:
+#   source: Service
+#       annotations: |
+#         'service.beta.kubernetes.io/aws-load-balancer-internal': "false"
 
 meshGateway:
   enabled: true
