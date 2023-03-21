@@ -27,7 +27,7 @@ global:
 
   tls:
     enabled: true
-#   enableAutoEncrypt: true
+    enableAutoEncrypt: true
     verify: true
 
   acls:
