@@ -1,0 +1,40 @@
+# This file configures the hello-world app which serves public web traffic.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: dcanadillas-demo
+    myapp: dcanadillas-demo
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      myapp: dcanadillas-demo
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: dcanadillas-demo
+        myapp: dcanadillas-demo
+        tier: backend
+      annotations:
+        consul.hashicorp.com/connect-inject: "true"
+        consul.hashicorp.com/connect-service: "backend"
+    spec:
+      serviceAccount: backend
+      containers:
+      - name: backend
+        image: hcdcanadillas/pydemo-back:v1.1-amd64
+        imagePullPolicy: Always
+        ports:
+          - name: http
+            containerPort: 8080
+        env:
+          # %{ for k,v in entrypoint.env }
+          # - name: ${k}
+          #   value: "${v}"
+          # %{ endfor }
+          - name: PORT
+            value: "8080"
