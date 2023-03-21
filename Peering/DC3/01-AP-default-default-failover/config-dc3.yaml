@@ -28,9 +28,9 @@ global:
       secretName: consul-partitions-acl-token 
       secretKey: token
 
-client:
-  enabled: false
-  grpc: true
+# client:
+#  enabled: false
+#  grpc: true
 
 externalServers:
   enabled: true
