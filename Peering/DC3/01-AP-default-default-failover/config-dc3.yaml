@@ -43,7 +43,7 @@ controller:
 
 connectInject:
   enabled: true
-  default: false                 # Default
+  default: true                
   transparentProxy:
     defaultEnabled: true         # Default
     logLevel: "debug"
