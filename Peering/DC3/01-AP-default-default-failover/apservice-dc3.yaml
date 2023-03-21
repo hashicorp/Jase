@@ -45,6 +45,10 @@ connectInject:
   default: false                 # Default
   transparentProxy:
     defaultEnabled: true         # Default
+  envoyExtraArgs: --log-level debug
+  metrics:
+    defaultEnabled: true
+    defaultEnableMerging: true
 
 
 ingressGateways:
