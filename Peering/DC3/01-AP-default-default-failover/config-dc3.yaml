@@ -47,7 +47,7 @@ connectInject:
   transparentProxy:
     defaultEnabled: true         # Default
     logLevel: "debug"
-  envoyExtraArgs: "--log-level debug"
+# envoyExtraArgs: "--log-level debug"
   metrics:
     defaultEnabled: true
     defaultEnableMerging: true
