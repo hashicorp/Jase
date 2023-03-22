@@ -6,6 +6,7 @@ global:
   image: hashicorp/consul-enterprise:1.14.4-ent
   imageEnvoy: "envoyproxy/envoy-alpine:v1.20.4"
   imageConsulDataplane: "hashicorp/consul-dataplane:1.1.0"
+  logLevel: "debug"
   enterpriseLicense:
     secretName: consul-ent-license
     secretKey: key
@@ -14,16 +15,12 @@ global:
     enabled: true
     name: "default"
     # name above is the partition name for servers to reside 	
-#   service:
-#     type: LoadBalancer
+    service:
 
   enableConsulNamespaces: true
 
   peering:
     enabled: true
-
-# gossipEncryption:
-#   autoGenerate: true
 
   tls:
     enabled: true
@@ -34,17 +31,28 @@ global:
    manageSystemACLs: true
 
 server:
-  replicas: 3 # 1 for MiniKube and small environment
-  bootstrapExpect: 3 # 1 for MiniKube and small environment
+  replicas: 3  # 1 for MiniKube or small environments
+  bootstrapExpect: 3 # 1 for as above environment
+  connect: true
+  enabled: true
   exposeGossipAndRPCPorts: true
   metrics:
     enabled: true
     enableAgentMetrics: true
     agentMetricsRetentionTime: '1m'
 
-
 connectInject:
   enabled: true
+  default: true                 
+  transparentProxy:
+    defaultEnabled: true         # Default
+  consulNamespaces:
+    consulDestinationNamespace: "default"   # Ignored when mirroringK8S is true
+    mirroringK8S: true
+#   mirroringK8SPrefix: ""
+  metrics:
+    defaultEnabled: true
+    defaultEnableMerging: false  
 
 ingressGateways:
   enabled: true
@@ -52,19 +60,19 @@ ingressGateways:
     - name: ingress-gateway
       service:
         type: 'LoadBalancer'
-# wanAddress:
-#   source: Service
+  wanAddress:
+    source: Service
 #       annotations: |
 #         'service.beta.kubernetes.io/aws-load-balancer-internal': "false"
 
 meshGateway:
   enabled: true
   replicas: 1
-  service:
-    enabled: true
-    type: 'LoadBalancer'
-#  wanAddress:
-#    source: Service
+# service:
+#   enabled: true
+#   type: 'LoadBalancer'
+# wanAddress:
+#   source: Service
 #       annotations: |
 #         'service.beta.kubernetes.io/aws-load-balancer-internal': "false"
 
