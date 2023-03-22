@@ -63,12 +63,6 @@ ingressGateways:
 #       annotations: |
 #         'service.beta.kubernetes.io/aws-load-balancer-internal': "false"
 
-        
-# wanAddress:
-#   source: Service
-#       annotations: |
-#         'service.beta.kubernetes.io/aws-load-balancer-internal': "false"
-
 meshGateway:
   enabled: true
   replicas: 1
