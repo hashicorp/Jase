@@ -1,0 +1,80 @@
+# Service to expose backend
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: backend
+  ports:
+  - name: http
+    protocol: TCP
+    port: 9091
+    targetPort: 9091
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: backend
+---
+# deployment for backend
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+      annotations:
+        "consul.hashicorp.com/connect-inject": "true"
+        "consul.hashicorp.com/transparent-proxy": "false"
+    spec:
+      serviceAccountName: backend
+      containers:
+      - name: backend
+        image: nicholasjackson/fake-service:v0.22.4
+        ports:
+        - containerPort: 9091
+        env:
+        - name: "LISTEN_ADDR"
+          value: "0.0.0.0:9091"
+        - name: "NAME"
+          value: "backend"
+        - name: "MESSAGE"
+          value: "Response from backend"
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceDefaults
+metadata:
+  name: backend
+spec:
+  protocol: "http"
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceResolver
+metadata:
+  name: backend
+spec:
+  connectTimeout: 10s
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: backend
+spec:
+  destination:
+    name: backend
+#   partition: tenant-1
+  sources:
+  - name: frontend
+    action: allow
+    partition: default
+
