@@ -24,13 +24,13 @@ jobs:
     steps:
 
     - name: Set up Go
-      uses: actions/setup-go@v2.1.3
+      uses: actions/setup-go@4d34df0c2316fe8122ab82dc22947d607c0c91f9 # v4.0.0
       with:
         go-version: '1.15'
       id: go
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v2.3.3
+      uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
 
     - name: Get dependencies
       run: |
@@ -57,13 +57,13 @@ jobs:
     steps:
 
     - name: Set up Go
-      uses: actions/setup-go@v2.1.3
+      uses: actions/setup-go@4d34df0c2316fe8122ab82dc22947d607c0c91f9 # v4.0.0
       with:
         go-version: '1.15'
       id: go
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v2.3.3
+      uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
 
     - name: Get dependencies
       run: |
