@@ -3,8 +3,7 @@ global:
   name: consul
   apiVersion: v2
   datacenter: dc2
-  image: hashicorp/consul-enterprise:1.14.4-ent
-  imageEnvoy: "envoyproxy/envoy-alpine:v1.20.4"
+  image: hashicorp/consul-enterprise:1.15.2-ent
   imageConsulDataplane: "hashicorp/consul-dataplane:1.1.0"
   logLevel: "debug"
   enterpriseLicense:
@@ -40,6 +39,7 @@ server:
     enabled: true
     enableAgentMetrics: true
     agentMetricsRetentionTime: '1m'
+    enableGatewayMetrics: true
 
 connectInject:
   enabled: true
@@ -53,7 +53,16 @@ connectInject:
   metrics:
     defaultEnabled: true
     defaultEnableMerging: false  
+  metrics:
+    defaultEnabled: true
+    defaultEnableMerging: false
+#    defaultPrometheusScrapePort: 20200
+#    defaultPrometheusScrapePath: "/metrics"
+#    defaultMergedMetricsPort: 20100
 
+terminatingGateways:
+  enabled: true
+  
 ingressGateways:
   enabled: true
   gateways:
@@ -78,17 +87,20 @@ meshGateway:
 
 metrics:
   enabled: true
-  provider: "prometheus"
-  baseURL: http://prometheus-server
-
+  
 controller:
   enabled: true
 
 ui:
   enabled: true
+  metrics:
+    enabled: true # by default, this inherits from the value global.metrics.enabled
+    provider: "prometheus"
+    baseURL: http://prometheus-server
   service:
     enabled: true
     type: LoadBalancer
+    
 
 prometheus:
  enabled: true
