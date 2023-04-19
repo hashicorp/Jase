@@ -3,8 +3,7 @@ global:
   name: consul
   apiVersion: v2
   datacenter: dc1
-  image: hashicorp/consul-enterprise:1.14.4-ent
-  imageEnvoy: "envoyproxy/envoy-alpine:v1.20.4"
+  image: hashicorp/consul-enterprise:1.15.2-ent
   imageConsulDataplane: "hashicorp/consul-dataplane:1.1.0"
   logLevel: "debug"
   enterpriseLicense:
@@ -40,6 +39,7 @@ server:
     enabled: true
     enableAgentMetrics: true
     agentMetricsRetentionTime: '1m'
+    enableGatewayMetrics: true
 
 connectInject:
   enabled: true
@@ -54,6 +54,9 @@ connectInject:
     defaultEnabled: true
     defaultEnableMerging: false  
 
+terminatingGateways:
+  enabled: true
+  
 ingressGateways:
   enabled: true
   gateways:
@@ -76,16 +79,15 @@ meshGateway:
 #       annotations: |
 #         'service.beta.kubernetes.io/aws-load-balancer-internal': "false"
 
-metrics:
-  enabled: true
-  provider: "prometheus"
-  baseURL: http://prometheus-server
-
 controller:
   enabled: true
 
 ui:
   enabled: true
+  metrics:
+    enabled: true # by default, this inherits from the value global.metrics.enabled
+    provider: "prometheus"
+    baseURL: http://prometheus-server
   service:
     enabled: true
     type: LoadBalancer
