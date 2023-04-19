@@ -1,7 +1,8 @@
 global:
   name: consul
   enabled: false
-  image: hashicorp/consul-enterprise:1.14.4-ent
+  image: hashicorp/consul-enterprise:1.15.2-ent
+  imageConsulDataplane: "hashicorp/consul-dataplane:1.1.0"
   logLevel: "debug"
   enterpriseLicense:
     secretName: consul-ent-license
@@ -9,7 +10,7 @@ global:
  
   adminPartitions:
     enabled: true
-    name: tenant-1
+    name: tenant-2
 
   enableConsulNamespaces: true
 
@@ -41,6 +42,15 @@ externalServers:
 controller: 
   enabled: true
 
+metrics:
+    defaultEnabled: true
+    defaultEnableMerging: true
+    defaultPrometheusScrapePort: 20200
+    defaultPrometheusScrapePath: "/metrics"
+    defaultMergedMetricsPort: 20100
+    agentMetricsRetentionTime: '1m'
+    enableGatewayMetrics: true
+
 connectInject:
   enabled: true
   default: true                
@@ -50,7 +60,13 @@ connectInject:
 # envoyExtraArgs: "--log-level debug"
   metrics:
     defaultEnabled: true
-    defaultEnableMerging: true
+    defaultEnableMerging: false
+    defaultPrometheusScrapePort: 20200
+    defaultPrometheusScrapePath: "/metrics"
+    defaultMergedMetricsPort: 20100
+    
+terminatingGateways:
+  enabled: true
 
 ingressGateways:
   enabled: true
@@ -58,6 +74,8 @@ ingressGateways:
     - name: ingress-gateway
       service:
         type: 'LoadBalancer'
+        ports:
+          - port: 8080
   wanAddress:
     source: Service
 #       annotations: |
@@ -72,3 +90,6 @@ meshGateway:
 #   type: 'LoadBalancer'
 # wanAddress:
 #   source: Service
+
+prometheus:
+ enabled: true
