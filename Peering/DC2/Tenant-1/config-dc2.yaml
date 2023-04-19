@@ -1,8 +1,7 @@
 global:
   name: consul
   enabled: false
-  image: hashicorp/consul-enterprise:1.14.4-ent
-  imageEnvoy: "envoyproxy/envoy-alpine:v1.20.4"
+  image: hashicorp/consul-enterprise:1.15.2-ent
   imageConsulDataplane: "hashicorp/consul-dataplane:1.1.0"
   logLevel: "debug"
   enterpriseLicense:
@@ -42,6 +41,15 @@ externalServers:
   
 controller: 
   enabled: true
+  
+metrics:
+    defaultEnabled: true
+    defaultEnableMerging: true
+    defaultPrometheusScrapePort: 20200
+    defaultPrometheusScrapePath: "/metrics"
+    defaultMergedMetricsPort: 20100
+    agentMetricsRetentionTime: '1m'
+    enableGatewayMetrics: true
 
 connectInject:
   consulNamespaces:
@@ -51,7 +59,16 @@ connectInject:
   logLevel: "debug"
   transparentProxy:
     defaultEnabled: true         # Default
-
+  metrics:
+    defaultEnabled: true
+    defaultEnableMerging: true
+    defaultPrometheusScrapePort: 20200
+    defaultPrometheusScrapePath: "/metrics"
+    defaultMergedMetricsPort: 20100
+    
+terminatingGateways:
+  enabled: true
+  
 ingressGateways:
   enabled: true
   gateways:
