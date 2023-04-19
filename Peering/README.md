@@ -14,15 +14,15 @@ DC2 configuration -----> DC2/
 
 Admin Partition on client clusters
 
-Helm chart in the DC1 directory and the config files are all in DC1/02-AP-diffAP-failover/countingapp
+Helm chart in the DC1 directory and the config files are all in DC1/Tenant-1/
 
-Helm chart in the DC2 directory and the config files are all in DC2/02-AP-diffAP-failover/countingapp
+Helm chart in the DC2 directory and the config files are all in DC2/Tenant-2/
 
 DC1 configuration -----> DC1
 
 DC2 configuration -----> DC2/Tenant-1/
 
-DC3 configuration -----> DC3/Teanant-2/
+DC3 configuration -----> DC3/Tenant-2/
 
 
 This demo will showcase the ability to failover services between two Consul datacenters (dc1 and dc2) that have been connected via Cluster peering. 
