@@ -1,7 +1,7 @@
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ExportedServices
 metadata:
-  name: partition-workload
+  name: tenant-1
 spec:
   services:
   - name: counting
