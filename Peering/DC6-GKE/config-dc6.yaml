@@ -1,0 +1,115 @@
+global:
+  name: consul-ten2
+  enabled: false
+  domain: consul
+  datacenter: dc5
+  image: hashicorp/consul-enterprise:1.15.2-ent
+# imageEnvoy: "envoyproxy/envoy-alpine:v1.25.1"
+  imageConsulDataplane: "hashicorp/consul-dataplane:1.1.0"
+  logLevel: "debug"
+  enterpriseLicense:
+    secretName: consul-ent-license
+    secretKey: key
+ 
+  adminPartitions:
+    enabled: true
+    name: tenant-2
+
+  enableConsulNamespaces: true
+
+  tls:
+    enabled: true
+    caCert:
+      secretName: consul-gke1-ca-cert 
+      secretKey: tls.crt
+    caKey:
+      secretName: consul-gke1-ca-key 
+      secretKey: tls.key
+
+  acls:
+    manageSystemACLs: true
+    bootstrapToken:
+      secretName: consul-gke1-partitions-acl-token 
+      secretKey: token
+
+externalServers:
+  enabled: true
+  hosts: [130.211.94.47]
+  tlsServerName: server.dc5.consul
+  k8sAuthMethodHost: https://35.205.136.75
+controller: 
+  enabled: true
+
+metrics:
+    defaultEnabled: true
+    defaultEnableMerging: true
+    defaultPrometheusScrapePort: 20200
+    defaultPrometheusScrapePath: "/metrics"
+    defaultMergedMetricsPort: 20100
+    agentMetricsRetentionTime: '1m'
+    enableGatewayMetrics: true
+
+dns:
+  enableRedirection: true
+  enabled: true
+
+apiGateway:
+  enabled: false
+
+connectInject:
+  consulNamespaces:
+    mirroringK8S: true
+  enabled: true
+  default: true                 # Default
+  transparentProxy:
+    defaultEnabled: true         # Default
+  cni:
+    enabled: true
+  metrics:
+    defaultEnabled: true
+    defaultEnableMerging: false
+    defaultPrometheusScrapePort: 20200
+    defaultPrometheusScrapePath: "/metrics"
+    defaultMergedMetricsPort: 20100
+
+
+syncCatalog:
+  enabled: true
+  k8sPrefix: null
+  k8sDenyNamespaces: ["kube-system", "kube-public"]
+  consulNamespaces:
+    mirroringK8S: true
+    mirroringK8SPrefix: ""
+  # addK8SNamespaceSuffix: false        # Leave this disabled. It's a TRAP!!! if the service name matches the pod name, it'll get stomped.
+
+
+terminatingGateways:
+  enabled: true
+
+ingressGateways:
+  enabled: true
+  gateways:
+    - name: ingress-gateway
+      service:
+        type: 'LoadBalancer'
+        ports:
+          - port: 8080
+
+  wanAddress:
+    source: Service
+#       annotations: |
+#         'service.beta.kubernetes.io/aws-load-balancer-internal': "false"
+
+
+meshGateway:
+  enabled: true
+  replicas: 1
+# service:
+#   enabled: true
+#   type: 'LoadBalancer'
+# wanAddress:
+#   source: Service
+
+prometheus:
+ enabled: true
+
