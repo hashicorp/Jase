@@ -1,0 +1,9 @@
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ExportedServices
+metadata:
+  name: default ## The name of the partition containing the service
+spec:
+  services:
+    - name: mesh-gateway # The name of the mesh gateway service in the partition
+      consumers:
+        - partition: tenant-1 # The name of the partition that receives the MGW service
