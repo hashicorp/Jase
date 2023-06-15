@@ -1,9 +1,11 @@
 global:
   enabled: true
-  name: consul
+  name: consul-gke1
+  domain: consul
   apiVersion: v2
-  datacenter: dc1
-  image: hashicorp/consul-enterprise:1.15.3-ent
+  datacenter: dc5
+  image: hashicorp/consul-enterprise:1.15.2-ent
+  imageEnvoy: "envoyproxy/envoy-alpine:v1.25.1"
   imageConsulDataplane: "hashicorp/consul-dataplane:1.1.0"
   logLevel: "debug"
   enterpriseLicense:
@@ -41,11 +43,14 @@ server:
     agentMetricsRetentionTime: '1m'
     enableGatewayMetrics: true
 
+
 connectInject:
   enabled: true
   default: true                 
   transparentProxy:
     defaultEnabled: true         # Default
+  cni:
+    enabled: true
   consulNamespaces:
     consulDestinationNamespace: "default"   # Ignored when mirroringK8S is true
     mirroringK8S: true
@@ -53,16 +58,40 @@ connectInject:
   metrics:
     defaultEnabled: true
     defaultEnableMerging: false  
+#    defaultPrometheusScrapePort: 20200
+#    defaultPrometheusScrapePath: "/metrics"
+#    defaultMergedMetricsPort: 20100
+
+apiGateway:
+  enabled: false
+#  logLevel: debug
+#  image: hashicorp/consul-api-gateway:$VERSION
+#  managedGatewayClass:
+#    enabled: true
+#    serviceType: LoadBalancer
 
 terminatingGateways:
   enabled: true
-  
+  gateways:
+    - name: terminating-gateway
+#      extraVolumes:
+#      - type: secret
+#        name: my-secret
+#        items: # optional items array
+#          - key: key
+#            path: rds-combined-ca-bundle.pem # secret will now mount to /consul/userconfig/my-secret/path
+
+
+
 ingressGateways:
   enabled: true
   gateways:
     - name: ingress-gateway
       service:
         type: 'LoadBalancer'
+        ports:
+          - port: 8080
+
   wanAddress:
     source: Service
 #       annotations: |
@@ -86,6 +115,8 @@ ui:
   enabled: true
   metrics:
     enabled: true # by default, this inherits from the value global.metrics.enabled
+#    dashboardURLTemplates:
+#        service: "https://dcr22597.live.dynatrace.com/ui/kubernetes?gtf=-2h&gf=all&entitySelector="
     provider: "prometheus"
     baseURL: http://prometheus-server
   service:

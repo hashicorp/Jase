@@ -3,7 +3,7 @@ global:
   name: consul
   apiVersion: v2
   datacenter: dc2
-  image: hashicorp/consul-enterprise:1.15.2-ent
+  image: hashicorp/consul-enterprise:1.15.3-ent
   imageConsulDataplane: "hashicorp/consul-dataplane:1.1.0"
   logLevel: "debug"
   enterpriseLicense:

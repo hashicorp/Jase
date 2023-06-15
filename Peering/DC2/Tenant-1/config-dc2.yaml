@@ -1,7 +1,7 @@
 global:
   name: consul
   enabled: false
-  image: hashicorp/consul-enterprise:1.15.2-ent
+  image: hashicorp/consul-enterprise:1.15.3-ent
   imageConsulDataplane: "hashicorp/consul-dataplane:1.1.0"
   logLevel: "debug"
   enterpriseLicense:

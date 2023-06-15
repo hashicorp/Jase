@@ -1,7 +1,7 @@
 global:
   name: consul
   enabled: false
-  image: hashicorp/consul-enterprise:1.15.1-ent
+  image: hashicorp/consul-enterprise:1.15.3-ent
   imageEnvoy: "envoyproxy/envoy-alpine:v1.25.1"
   imageConsulDataplane: "hashicorp/consul-dataplane:1.1.0"
   logLevel: "debug"
