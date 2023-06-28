@@ -50,7 +50,7 @@ spec:
         - containerPort: 9001
         args:
         - -listen=0.0.0.0:9001
-        - -text={"count":9998,"hostname":"mock-counting-service --- Tennant1"}
+        - -text={"count":9998,"hostname":"mock-counting-service --- Tenant1"}
 ---
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceDefaults
