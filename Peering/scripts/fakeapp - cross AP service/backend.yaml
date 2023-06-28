@@ -76,5 +76,5 @@ spec:
   sources:
   - name: frontend
     action: allow
-    partition: tenant-2
+    partition: default
 
