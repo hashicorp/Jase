@@ -6,9 +6,14 @@ global:
   image: hashicorp/consul-enterprise:1.15.3-ent
   imageConsulDataplane: "hashicorp/consul-dataplane:1.1.0"
   logLevel: "debug"
+
   enterpriseLicense:
     secretName: consul-ent-license
     secretKey: key
+
+  dns:
+    enabled: true
+    enableRedirection: true
 
   adminPartitions:
     enabled: true
@@ -46,6 +51,8 @@ connectInject:
   default: true                 
   transparentProxy:
     defaultEnabled: true         # Default
+  cni:
+    enabled: true
   consulNamespaces:
     consulDestinationNamespace: "default"   # Ignored when mirroringK8S is true
     mirroringK8S: true
