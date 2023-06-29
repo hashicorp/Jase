@@ -3,6 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend
+  namespace: default
 spec:
   selector:
     app: frontend
@@ -23,6 +24,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
+  namespace: default
   labels:
     app: frontend
 spec:
@@ -35,34 +37,39 @@ spec:
       labels:
         app: frontend
       annotations:
-        "consul.hashicorp.com/connect-inject": "true"
-        "consul.hashicorp.com/transparent-proxy": "false"
+        consul.hashicorp.com/connect-inject: "true"
+        consul.hashicorp.com/transparent-proxy: "true"
+        consul.hashicorp.com/service-tags: 'dc1'
 #       "consul.hashicorp.com/connect-service-upstreams": "backend:9091"
-        "consul.hashicorp.com/connect-service-upstreams": "backend.default.tenant-1:9091"
-         #For the upstream line, this points to the #"<servicename>.<consul-namespace>.<partitionname>:<port#>" of the upstream service.
+#       "consul.hashicorp.com/connect-service-upstreams": "backend.default.tenant-1:9091"
+        consul.hashicorp.com/connect-service-upstreams: "backend.svc.default.ns.dc1-tenant-1.peer:9091"
+         #For the upstream line, this points to the #"<servicename>.<consul-namespace>.<partitionname>.peer:<port#>" of the upstream service.
          #If its in the same partition and namespace, it can be omitted, ex:
-#        "consul.hashicorp.com/connect-service-upstreams": "backend:9091"
+        consul.hashicorp.com/transparent-proxy-exclude-inbound-ports: "9090"   # Without this exclusion the FakeService UI is shitcanned.
+#       consul.hashicorp.com/connect-service-upstreams: "backend:9091"
     spec:
       serviceAccountName: frontend
       containers:
-      - name: frontend
-        image: nicholasjackson/fake-service:v0.22.4
-        ports:
-        - containerPort: 9090
-        env:
-        - name: "LISTEN_ADDR"
-          value: "0.0.0.0:9090"
-        - name: "UPSTREAM_URIS"
-          value: "http://127.0.0.1:9091" 
+        - name: frontend
+          image: nicholasjackson/fake-service:v0.22.4
+          ports:
+            - containerPort: 9090
+          env:
+            - name: "LISTEN_ADDR"
+              value: "0.0.0.0:9090"
+            - name: "UPSTREAM_URIS"
+#             value: "http://127.0.0.1:9091" 
           #Set value above if TProxy is off
-#          value: "http://backend.virtual.default.ns.tenant-1.ap.dc1.dc.consul:9091"
+#             value: "http://backend.virtual.default.ns.tenant-1.ap.dc1.dc.consul:9091"
+#             value: "http://backend.virtual.default.ns.tenant-1.ap.dc1.dc.consul:9091"
           #Set value above if TProxy is on: <service>.virtual.<namespace>.ns.<partition>.ap.<datacenter>.dc.<domain>                   
-        - name: "NAME"
-          value: "frontend"
-        - name: "MESSAGE"
-          value: "Hello World"
-        - name: "HTTP_CLIENT_KEEP_ALIVES"
-          value: "false"
+              value: 'http://backend.virtual.default.ns.tenant-1.ap.dc1.dc.consul'
+            - name: "NAME"
+              value: "frontend"
+            - name: "MESSAGE"
+              value: "Hello World"
+            - name: "HTTP_CLIENT_KEEP_ALIVES"
+              value: "false"
 ---
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceDefaults
