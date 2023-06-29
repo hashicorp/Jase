@@ -39,7 +39,7 @@ spec:
       annotations:
         consul.hashicorp.com/connect-inject: "true"
         consul.hashicorp.com/transparent-proxy: "true"
-        consul.hashicorp.com/service-tags: 'dc1'
+        consul.hashicorp.com/service-tags: 'dc1, backend-tenant1'
 #       "consul.hashicorp.com/connect-service-upstreams": "backend:9091"
         consul.hashicorp.com/connect-service-upstreams: "backend.svc.default.ns.dc1-tenant-1.peer:9091"
          #For the upstream line, this points to the #"<servicename>.<consul-namespace>.<partitionname>.peer:<port#>" of the upstream service.
