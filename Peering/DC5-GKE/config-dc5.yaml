@@ -4,14 +4,19 @@ global:
   domain: consul
   apiVersion: v2
   datacenter: dc5
-  image: hashicorp/consul-enterprise:1.15.2-ent
+  image: hashicorp/consul-enterprise:1.15.3-ent
   imageEnvoy: "envoyproxy/envoy-alpine:v1.25.1"
   imageConsulDataplane: "hashicorp/consul-dataplane:1.1.0"
   logLevel: "debug"
+
   enterpriseLicense:
     secretName: consul-ent-license
     secretKey: key
 
+  dns:
+    enabled: true
+    enableRedirection: true 
+  
   adminPartitions:
     enabled: true
     name: "default"
@@ -63,12 +68,12 @@ connectInject:
 #    defaultMergedMetricsPort: 20100
 
 apiGateway:
-  enabled: false
-#  logLevel: debug
-#  image: hashicorp/consul-api-gateway:$VERSION
-#  managedGatewayClass:
-#    enabled: true
-#    serviceType: LoadBalancer
+    enabled: true
+    image: hashicorp/consul-api-gateway:0.5.2
+    logLevel: debug
+    managedGatewayClass:
+    enabled: true
+    serviceType: LoadBalancer
 
 terminatingGateways:
   enabled: true

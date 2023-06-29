@@ -7,10 +7,15 @@ global:
 # imageEnvoy: "envoyproxy/envoy-alpine:v1.25.1"
   imageConsulDataplane: "hashicorp/consul-dataplane:1.1.0"
   logLevel: "debug"
+
   enterpriseLicense:
     secretName: consul-ent-license
     secretKey: key
- 
+
+  dns:
+    enabled: true
+    enableRedirection: true 
+
   adminPartitions:
     enabled: true
     name: tenant-2
@@ -49,12 +54,14 @@ metrics:
     agentMetricsRetentionTime: '1m'
     enableGatewayMetrics: true
 
-dns:
-  enableRedirection: true
-  enabled: true
+ apiGateway:
+    enabled: true
+    image: hashicorp/consul-api-gateway:0.5.2
+    logLevel: debug
+    managedGatewayClass:
+    enabled: true
+    serviceType: LoadBalancer
 
-apiGateway:
-  enabled: false
 
 connectInject:
   consulNamespaces:

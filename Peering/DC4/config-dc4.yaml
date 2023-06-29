@@ -5,10 +5,15 @@ global:
   imageEnvoy: "envoyproxy/envoy-alpine:v1.25.1"
   imageConsulDataplane: "hashicorp/consul-dataplane:1.1.0"
   logLevel: "debug"
+
   enterpriseLicense:
     secretName: consul-ent-license
     secretKey: key
- 
+
+  dns:
+    enabled: true
+    enableRedirection: true 
+   
   adminPartitions:
     enabled: true
     name: tenant-2
@@ -39,10 +44,6 @@ externalServers:
 controller: 
   enabled: true
 
-dns:
-  enableRedirection: true
-  enabled: true
-
 connectInject:
   consulNamespaces:
     mirroringK8S: true
@@ -50,6 +51,14 @@ connectInject:
   default: true                 # Default
   transparentProxy:
     defaultEnabled: true         # Default
+  cni:
+    enabled: true
+  metrics:
+    defaultEnabled: true
+    defaultEnableMerging: false
+    defaultPrometheusScrapePort: 20200
+    defaultPrometheusScrapePath: "/metrics"
+    defaultMergedMetricsPort: 20100
 
 ingressGateways:
   enabled: true
