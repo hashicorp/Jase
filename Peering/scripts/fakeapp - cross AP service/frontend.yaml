@@ -41,12 +41,10 @@ spec:
         consul.hashicorp.com/transparent-proxy: "true"
         consul.hashicorp.com/service-tags: 'dc1'
 #       "consul.hashicorp.com/connect-service-upstreams": "backend:9091"
-#       "consul.hashicorp.com/connect-service-upstreams": "backend.default.tenant-1:9091"
         consul.hashicorp.com/connect-service-upstreams: "backend.svc.default.ns.dc1-tenant-1.peer:9091"
          #For the upstream line, this points to the #"<servicename>.<consul-namespace>.<partitionname>.peer:<port#>" of the upstream service.
          #If its in the same partition and namespace, it can be omitted, ex:
         consul.hashicorp.com/transparent-proxy-exclude-inbound-ports: "9090"   # Without this exclusion the FakeService UI is shitcanned.
-#       consul.hashicorp.com/connect-service-upstreams: "backend:9091"
     spec:
       serviceAccountName: frontend
       containers:
@@ -60,8 +58,6 @@ spec:
             - name: "UPSTREAM_URIS"
 #             value: "http://127.0.0.1:9091" 
           #Set value above if TProxy is off
-#             value: "http://backend.virtual.default.ns.tenant-1.ap.dc1.dc.consul:9091"
-#             value: "http://backend.virtual.default.ns.tenant-1.ap.dc1.dc.consul:9091"
           #Set value above if TProxy is on: <service>.virtual.<namespace>.ns.<partition>.ap.<datacenter>.dc.<domain>                   
               value: 'http://backend.virtual.default.ns.tenant-1.ap.dc1.dc.consul'
             - name: "NAME"
