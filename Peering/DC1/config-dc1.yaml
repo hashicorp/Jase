@@ -3,8 +3,9 @@ global:
   name: consul
   apiVersion: v2
   datacenter: dc1
-  image: hashicorp/consul-enterprise:1.15.3-ent
-  imageConsulDataplane: "hashicorp/consul-dataplane:1.1.0"
+  image: hashicorp/consul-enterprise:1.16.1-ent
+  imageConsulDataplane: "hashicorp/consul-dataplane:1.2.1"
+  # imageEnvoy: "envoyproxy/envoy-alpine:v1.25.6"   # Pulls the latest supported when unspecified.
   logLevel: "debug"
 
   enterpriseLicense:
@@ -61,17 +62,20 @@ connectInject:
     defaultEnabled: true
     defaultEnableMerging: false  
 
-  apiGateway:
-    enabled: true
-    image: hashicorp/consul-api-gateway:0.5.2
-    logLevel: debug
-    managedGatewayClass:
-    enabled: true
+#  apiGateway:
+#    enabled: true
+#    image: hashicorp/consul-api-gateway:0.5.2
+#    logLevel: debug
+#    managedGatewayClass:
+#    enabled: true
 
 
 terminatingGateways:
   enabled: true
-  
+  gateways:
+  - name: terminating-gateway
+  logLevel: debug
+   
 ingressGateways:
   enabled: true
   gateways:
