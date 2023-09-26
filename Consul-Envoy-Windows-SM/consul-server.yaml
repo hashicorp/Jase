@@ -2,20 +2,20 @@ global:
   datacenter: "dc1"
   name: consul
   domain: consul
-  image: hashicorp/consul-enterprise:1.11.2-ent
+  image: hashicorp/consul-enterprise:1.16.2-ent
   enterpriseLicense:
     secretName: consul-ent-license
     secretKey: key
-  # adminPartitions:
-  #   enabled: false
+    adminPartitions:
+      enabled: false
   tls:
     enabled: true
     httpsOnly: false
     enableAutoEncrypt: true
-  federation:
-    enabled: true
-    createFederationSecret: true
-  acls:
+ #federation:
+ #  enabled: true
+ #  createFederationSecret: true
+ # acls:
     manageSystemACLs: true
     createReplicationToken: true
   gossipEncryption:
