@@ -184,7 +184,7 @@ auto_reload_config = true
 Bootstrap DC1 Server Run following command: 
 
 ```
-Consul acl bootstrap
+consul acl bootstrap
 
 You will see an outbput that looks like this:
 
