@@ -238,7 +238,9 @@ Create Consul Server Agent RPC certificates
 The exported CA cert and key from the kube primary, need to be in the same directory when running this command:
 
 ```
-Consul keygen —---> keep for all servers & clients
+Consul keygen —---> keep for all servers & clients  # will create a gossip key to use as the encrpt key in the agent file
+encrypt = "mnq9VuskJYWOZI+fiZTsX/4uLtiHlw5r48YRDZSHMLg=
+
 consul tls cert create -server -dc <my dc-name>
 Copy Server Agent Certs and CA Cert to Consul Config directory
 sudo mkdir -p /consul/config
@@ -246,8 +248,10 @@ sudo mv vm-secondary-server-consul-0* /consul/config/certs
 sudo mv consul-agent-ca.pem /consul/config/certs
 ```
 ```
-Write Consul Enterprise license file
+Change ownership of files to consul (no root or will fail to execute)
+
 Copy enterprise license contents to: /etc/consul.d/consul.hclic
+
 sudo chown -R consul:consul /consul
 sudo chown -R consul:consul /etc/consul.d
 sudo chown -R consul:consul /consul/config
