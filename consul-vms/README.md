@@ -192,12 +192,12 @@ Create Time:  2018-10-22 11:27:04.479026 -0400 EDT
 Policies:
    00000000-0000-0000-0000-000000000001 - global-management
 Copy the secret ID and store this in the environment variables CONSUL_HTTP_TOKEN and CONSUL_MGMT_TOKEN by running folling command. Replace <bootstrap_token> by the token copied above
-```
-```
+
+
 export CONSUL_HTTP_TOKEN="<bootstrap_token>"
 export CONSUL_MGMT_TOKEN="<bootstrap_token>"
 NOTE: The bootstrap token is like a 'root access' to your system and should only be used for initial bootstrap. Store it safely.
-```
+
 
 Before we can install and register any new node we need to create a node policy. Run the following command on the DC Server
 sudo mkdir /opt/consul/policies
