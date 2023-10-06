@@ -7,8 +7,41 @@
 
 - Install consul client
 
+Install Consul Binary
+Debian-based instructions:
 
-Todo: add k8s and vm´s etc...
+```
+
+sudo apt install wget unzip -y
+wget https://releases.hashicorp.com/consul/1.16.2+ent/consul_1.16.2+ent_linux_amd64.zip
+unzip consul_1.16.2+ent_linux_amd64.zip
+sudo mv consul /usr/local/bin
+sudo apt update && sudo apt install consul
+
+```
+Install Envoy Binary
+VM / Bare metal
+For non-kubernetes, the Envoy binary will need to be acquired and pushed to the workloads. 
+Downloading Envoy binaries can be a lot more challenging than you’d expect.
+get-envoy was the standard, but is now discontinued due to trademark issues.
+
+Debian-based instructions:
+
+
+```
+https://www.envoyproxy.io/docs/envoy/latest/start/install —-> envoy install URL
+
+ENVOY_VERSION="1.25.6"
+
+$ sudo apt update
+
+$ sudo apt install apt-transport-https gnupg2 curl lsb-release
+
+
+$ curl -sL 'https://deb.dl.getenvoy.io/public/gpg.8115BA8E629CC074.key' | sudo gpg --dearmor -o /usr/share/keyrings/getenvoy-keyring.gpg
+
+```
+
 
 ## STEP BY STEP GUIDE on Installing Consul on VM´s with full zero trust and TLS. 
 This guide describes the following:
@@ -199,6 +232,28 @@ Policies:
 ```
 
 Copy the secret ID and store this in the environment variables CONSUL_HTTP_TOKEN and CONSUL_MGMT_TOKEN by running folling command. Replace <bootstrap_token> by the token copied above
+
+Create Consul Server Agent RPC certificates
+
+The exported CA cert and key from the kube primary, need to be in the same directory when running this command:
+
+```
+Consul keygen —---> keep for all servers & clients
+consul tls cert create -server -dc <my dc-name>
+Copy Server Agent Certs and CA Cert to Consul Config directory
+sudo mkdir -p /consul/config
+sudo mv vm-secondary-server-consul-0* /consul/config/certs
+sudo mv consul-agent-ca.pem /consul/config/certs
+```
+```
+Write Consul Enterprise license file
+Copy enterprise license contents to: /etc/consul.d/consul.hclic
+sudo chown -R consul:consul /consul
+sudo chown -R consul:consul /etc/consul.d
+sudo chown -R consul:consul /consul/config
+sudo chown -R consul:consul /consul/config/certs
+sudo chown -R consul:consul /consul/config/policies
+```
 
 ```
 export CONSUL_HTTP_TOKEN="<bootstrap_token>"
