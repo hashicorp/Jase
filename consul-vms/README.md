@@ -181,7 +181,11 @@ tls {
 auto_reload_config = true
 
 ```
-Bootstrap DC1 Server Run following command: Consul acl bootstrap
+Bootstrap DC1 Server Run following command: 
+
+```
+Consul acl bootstrap
+
 You will see an outbput that looks like this:
 
 AccessorID:   4d123dff-f460-73c3-02c4-8dd64d136e01
@@ -191,11 +195,15 @@ Local:        false
 Create Time:  2018-10-22 11:27:04.479026 -0400 EDT
 Policies:
    00000000-0000-0000-0000-000000000001 - global-management
+
+```
+
 Copy the secret ID and store this in the environment variables CONSUL_HTTP_TOKEN and CONSUL_MGMT_TOKEN by running folling command. Replace <bootstrap_token> by the token copied above
 
-
+```
 export CONSUL_HTTP_TOKEN="<bootstrap_token>"
 export CONSUL_MGMT_TOKEN="<bootstrap_token>"
+```
 NOTE: The bootstrap token is like a 'root access' to your system and should only be used for initial bootstrap. Store it safely.
 
 
@@ -325,129 +333,4 @@ sudo systemctl enable envoy.service
 sudo systemctl start envoy.service
 Check the good functioning of the service by running journalctl -e -u consul and journalctl -e -u envoy Also log in to the consul UI and check that all services are healthy and green :)
 
-Setup of the secondary DC
-Create a replication token. Before we start setting up the second DC we need to create a token for the Consul servers in the secondary DC. This will give them persmissions to replicate the information (ACL´s, intentions etc..) from the primary DC
-sudo tee /opt/consul/policies/replication-policy.hcl > /dev/null << EOF
-acl = "write"
 
-operator = "write"
-
-service_prefix "" {
-  policy = "read"
-  intentions = "read"
-}
-
-consul acl policy create \
-  -token=${CONSUL_MGMT_TOKEN} \
-  -name replication-policy \
-  -rules @/opt/consul/policies/replication-policy.hcl
-
-consul acl token create \
-  -token=${CONSUL_MGMT_TOKEN} \
-  -description "replication token" \
-  -policy-name replication-policy
-Copy the CA certificate located from the server of the primary DC to the first server of the secondary DC The file is located in */opt/consul/tls of DC-1-Server. Copy the CA Certificate to the same directory on the secondary server.
-From within the tls directory run the following commands
-
-consul tls cert create -server -dc dc2 -node "*"
-consul tls cert create -client -dc dc2
-Set the configuration of the secondary DC Server 1. *Change the to the public IP address of the mesh gateway from the primary DC setup above. *Change the <enc_key> to the same encryption key used above.
-Run the following on the server:
-
-sudo tee /etc/consul.d/consul.hcl > /dev/null << "EOF"
-datacenter = "dc-2"
-primary_gateways = ["<primary-gw-ip>:443"]
-primary_datacenter = "dc-1"
-client_addr = "0.0.0.0"
-data_dir = "/opt/consul"
-license_path = "/opt/consul/consul.hclic"
-encrypt = "<enc_key>"
-ca_file = "/opt/consul/tls/consul-agent-ca.pem"
-cert_file = "/opt/consul/tls/dc2-server-consul-0.pem"
-key_file = "/opt/consul/tls/dc2-server-consul-0-key.pem"
-verify_incoming = true
-verify_outgoing = true
-verify_server_hostname = true
-server = true
-bootstrap_expect = 1
-ui = true
-enable_central_service_config = true
-auto_encrypt {
-  allow_tls = true
-}
-acl = {
-  enabled = true
-  default_policy = "deny"
-  enable_token_persistence = true
-  tokens {
-    agent = "dc323b5f-89ba-34c3-0c79-021607323e19"
-    replication = "dc323b5f-89ba-34c3-0c79-021607323e19"
-  }
-
-}
-ports {
- grpc = 8502,
- https = 8501
-}
-connect {
-  enabled = true
-  enable_mesh_gateway_wan_federation = true
-}
-EOF
-Enable and start consul
-sudo systemctl enable consul
-sydo systemctl start consul
-Check for any errors errors. You will see errors appear in the beginning as it takes time for the ACLs to be copied over. Also you will see some connection errors which is because the meshgateway still needs to be started for the secondary DC.
-
-systemctl -e -u consul
-Configure and start the secondary meshgateway instance Run the following command. Replace with the node token created in the first DC Replace with the encryption key created in the first DC
-sudo tee /etc/consul.d/consul.hcl  > /dev/null << "EOF"
-datacenter = "dc-2"
-primary_datacenter = "dc-1"
-connect = {
-  enabled = true
-}
-data_dir = "/opt/consul/data"
-log_level = "INFO"
-retry_join = ["provider=aws tag_key=consulserver tag_value=dc-2"]
-ca_file = "/opt/consul/tls/consul-agent-ca.pem"
-verify_incoming = false
-verify_outgoing = true
-verify_server_hostname = true
-auto_encrypt = {
-  tls = true
-}
-acl {
-  enabled        = true
-  default_policy = "deny"
-  down_policy    = "extend-cache"
-
-  tokens {
-    "agent" = "<node-token>"
-  }
-}
-ports {
- grpc = 8502
-}
-encrypt = "<enc-key>"
-EOF
-Enable and start envoy Run the following command: Replace with the intenral IP address of the instance running this server Replace with the external IP address of the instance running this server Replace witgh the mgw token created in DC1
-sudo tee /etc/systemd/system/envoy.service > /dev/null << "EOF"
-[Unit]
-Description=Envoy
-After=network-online.target
-Wants=consul.service
-[Service]
-ExecStart=/usr/bin/consul connect envoy -expose-servers -gateway=mesh -register -service "mesh-gateway2" -address "<mgw2-internal-ip>:443" -wan-address "<mgw2-external-ip>:443" -token <mgw-token> -tls-server-name "server.dc2.consul" -- -l debug
-Restart=always
-RestartSec=5
-StartLimitIntervalSec=0
-[Install]
-WantedBy=multi-user.target
-EOF
-
-sudo systemctl enable envoy.service
-sudo systemctl start envoy.service
-Check the envoy service has been started succesfully: a. Check the interface b. Run the following command and check for any errors: journalctl -e -u consul
-
-You have now setup 2 wa federated DC´s with
