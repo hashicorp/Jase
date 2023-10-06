@@ -12,7 +12,7 @@ Todo: add k8s and vm´s etc...
 
 ## STEP BY STEP GUIDE on Installing Consul on VM´s with full zero trust and TLS. 
 This guide describes the following:
-- How top install 2 DC´s connected with wan federation.
+- How top install a secure DC.
 - TLS is enabled everywhere
 - Default Deny
 - Auto Encrypt
