@@ -1,17 +1,24 @@
+![](Files/Consul_Enterprise_Logo_Color_RGB.svg)
 
-Disclaimer: This setup is for POC purposes and not fit for production
+**Disclaimer: This setup is for POC purposes and not fit for production**
 
-Consul POC Guide
+#   Consul POC Guide
+
 Prerequisites:
+- Install packer
+- Install consul client
+- Install kubectl
+- Install helm
 
-Install packer
-Install consul client
-Install kubectl
-Install helm
 Todo: add k8s and vm´s etc...
 
-STEP BY STEP GUIDE on Installing Consul on VM´s with full zero trust and TLS.
+## STEP BY STEP GUIDE on Installing Consul on VM´s with full zero trust and TLS. 
 This guide describes the following:
+- How top install 2 DC´s connected with wan federation.
+- TLS is enabled everywhere
+- Default Deny
+- Auto Encrypt
+### Setup of DC1
 
 How top install 2 DC´s connected with wan federation.
 TLS is enabled everywhere
