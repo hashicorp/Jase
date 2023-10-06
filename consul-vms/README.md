@@ -208,6 +208,8 @@ NOTE: The bootstrap token is like a 'root access' to your system and should only
 
 
 Before we can install and register any new node we need to create a node policy. Run the following command on the DC Server
+
+```
 sudo mkdir /opt/consul/policies
 sudo tee /opt/policies/nodepolicy.hcl > /dev/null << EOF
 agent_prefix "" {
@@ -223,7 +225,8 @@ session_prefix "" {
   policy = "read"
 }
 EOF
-
+```
+```
 consul acl policy create \
   -token=${CONSUL_MGMT_TOKEN} \
   -name node-policy \
@@ -233,11 +236,15 @@ consul acl token create \
   -token=${CONSUL_MGMT_TOKEN} \
   -description "node token” \
   -policy-name node-policy
+```
+
 Copy the secret id from the node token and run the following command consul acl set-agent-token agent "<node token>"
 
 On the mesh gateway server run the following commands:
 Replace with the ndoe token created above
 Replace with the encryption key found on dc-1-server
+
+```
 sudo tee /etc/consul.d/consul.hcl > /dev/null << EOF
 datacenter = "dc-1"
 connect = {
@@ -263,8 +270,12 @@ ports {
 }
 encrypt = "<encryption key>"
 EOF
+```
+
 In order for a mesh-gateway to register itself as a service it needs to have a token that allows it to do so.
 sudo tee /opt/consul/policies/mgw.hcl > /dev/null << EOF
+
+```
 agent_prefix "" {
   policy = "read"
 }
@@ -278,7 +289,8 @@ node_prefix "" {
   policy = "write"
 }
 EOF
-
+```
+```
 consul acl policy create \
   -token=${CONSUL_MGMT_TOKEN} \
   -name mgw-policy \
@@ -288,11 +300,13 @@ consul acl token create \
   -token=${CONSUL_MGMT_TOKEN} \
   -description “mgw token" \
   -policy-name mgw-policy
+```
 You will need the secret id (token) from that last command in a later step.
 
 We will now set a default config for the services in across all DC´s to use the local meshgateway as a default. There are other options here. TODO: Add link
 Run the following command
 
+```
 sudo tee /opt/policies/default-policy.hcl > /dev/null << "EOF"
 Kind = "proxy-defaults"
 Name = "global"
@@ -300,19 +314,27 @@ MeshGateway {
    Mode = "local"
 }
 EOF
+```
 
+```
 consul config write /opt/policies/default-policy.hcl
+```
+
 We are now ready to start the envoy.
 We will first set some environment variables which will be used by the systemd service.
 
 Run the following command: Change the by the internal IP of the server for DC1
 
+```
 sudo tee /etc/consul.d/envoy.env > /dev/null << "EOF"
 CONSUL_CACERT=/opt/consul/tls/consul-agent-ca.pem
 CONSUL_HTTP_SSL=true
 CONSUL_HTTP_ADDR=<dc-1-server-ip>:8501
+```
+
 Now create the systemd service by running following command. Change by the token create in step 6 above.
 
+```
 sudo tee /etc/systemd/system/envoy.service > /dev/null << "EOF"
 [Unit]
 Description=Envoy
@@ -327,10 +349,19 @@ StartLimitIntervalSec=0
 [Install]
 WantedBy=multi-user.target
 EOF
+```
 
-
+```
 sudo systemctl enable envoy.service
 sudo systemctl start envoy.service
-Check the good functioning of the service by running journalctl -e -u consul and journalctl -e -u envoy Also log in to the consul UI and check that all services are healthy and green :)
+
+```
+
+Check the good functioning of the service by running 
+```
+journalctl -e -u consul and journalctl -e -u envoy
+```
+
+Also log in to the consul UI and check that all services are healthy and green :)
 
 
