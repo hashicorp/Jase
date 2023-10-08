@@ -249,7 +249,7 @@ Copy the secret ID and store this in the environment variables CONSUL_HTTP_TOKEN
 
 Create Consul Server Agent RPC certificates
 
-The exported CA cert and key from the kube primary, need to be in the same directory when running this command:
+The exported CA cert and key from the  primary, need to be in the same directory when running this command:
 
 ```
 Consul keygen —---> keep for all servers & clients  # will create a gossip key to use as the encrpt key in the agent file
