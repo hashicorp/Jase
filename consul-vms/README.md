@@ -96,7 +96,9 @@ peering { enabled = true }
 data_dir = "/consul/data"
 
 #addresses = {
+#  dns = "0.0.0.0"
 #  http = "0.0.0.0"
+#  https = "0.0.0.0"
 #  grpc = "0.0.0.0"
 #  grpc_tls = "0.0.0.0"
 #}
@@ -106,7 +108,7 @@ data_dir = "/consul/data"
 # servers. By default, this is "127.0.0.1", allowing only loopback connections. In
 # Consul 1.0 and later this can be set to a space-separated list of addresses to bind
 # to, or a go-sockaddr template that can potentially resolve to multiple addresses.
- client_addr = "0.0.0.0"
+client_addr = "0.0.0.0"
 
 # ui
 # Enables the built-in web UI server and the required HTTP routes. This eliminates
@@ -135,18 +137,21 @@ server = true
 # Bind addr
 # You may use IPv4 or IPv6 but if you have multiple interfaces you must be explicit.
 #bind_addr = "[::]" # Listen on all IPv6
-bind_addr = "0.0.0.0" # Listen on all IPv4
+#bind_addr = "0.0.0.0" # Listen on all IPv4
 #
 # Advertise addr - if you want to point clients to a different address than bind or LB.
-advertise_addr = "172.31.18.187"   # "127.0.0.1"
+#advertise_addr = "172.31.27.191"   # "127.0.0.1"
 # advertise_addr_wan = "54.228.176.154"
+advertise_addr = "{{ GetDefaultInterfaces | exclude \"type\" \"IPv6\" | attr \"address\" }}"
+client_addr = "0.0.0.0"
+
 
 ports = {
   grpc = 8502
-# https = 8501
+  https = 8501
 # http = -1
   grpc_tls = 8503
-  dns = 8600
+# dns = 8600
 }
 
 # Enterprise License
@@ -160,7 +165,7 @@ license_path = "/etc/consul.d/consul.hclic"
 # bootstraps the cluster. This allows an initial leader to be elected automatically.
 # This cannot be used in conjunction with the legacy -bootstrap flag. This flag requires
 # -server mode.
-#bootstrap_expect=1
+bootstrap_expect=1
 
 # encrypt
 # Specifies the secret key to use for encryption of Consul network traffic. This key must
@@ -171,7 +176,7 @@ license_path = "/etc/consul.d/consul.hclic"
 # protocol, this option only needs to be provided once on each agent's initial startup
 # sequence. If it is provided after Consul has been initialized with an encryption key,
 # then the provided key is ignored and a warning will be displayed.
-encrypt = "mnq9VuskJYWOZI+fiZTsX/4uLtiHlw5r48YRDZSHMLg="
+encrypt = "oxFP6MiiCV58b0eeRXfPP7kc5db9wInyvM0zhig2Vxg="
 
 # retry_join
 # Similar to -join but allows retrying a join until it is successful. Once it joins 
@@ -192,7 +197,8 @@ encrypt = "mnq9VuskJYWOZI+fiZTsX/4uLtiHlw5r48YRDZSHMLg="
 #retry_join = ["provider=aws tag_key=... tag_value=..."]
 #retry_join = ["provider=azure tag_name=... tag_value=... tenant_id=... client_id=... subscription_id=... secret_access_key=..."]
 #retry_join = ["provider=gce project_name=... tag_value=..."]
-#retry_join = ["172.31.18.187", "172.31.19.0", "172.31.19.109"] 
+#retry_join = ["172.31.27.191"] 
+retry_join = ["172.31.27.191"] # , "172.31.18.129", "172.31.21.146"] 
 
 acl {
   enabled = true
