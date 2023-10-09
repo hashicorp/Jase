@@ -35,7 +35,7 @@ addresses = {
 # servers. By default, this is "127.0.0.1", allowing only loopback connections. In
 # Consul 1.0 and later this can be set to a space-separated list of addresses to bind
 # to, or a go-sockaddr template that can potentially resolve to multiple addresses.
- client_addr = "0.0.0.0"
+client_addr = "0.0.0.0"
 
 # ui
 # Enables the built-in web UI server and the required HTTP routes. This eliminates
