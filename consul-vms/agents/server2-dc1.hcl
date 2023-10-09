@@ -95,7 +95,7 @@ license_path = "/etc/consul.d/consul.hclic"
 # bootstraps the cluster. This allows an initial leader to be elected automatically.
 # This cannot be used in conjunction with the legacy -bootstrap flag. This flag requires
 # -server mode.
-bootstrap_expect=1
+bootstrap_expect=3
 
 # encrypt
 # Specifies the secret key to use for encryption of Consul network traffic. This key must
