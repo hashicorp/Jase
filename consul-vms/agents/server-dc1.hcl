@@ -100,7 +100,7 @@ bootstrap_expect=1
 # protocol, this option only needs to be provided once on each agent's initial startup
 # sequence. If it is provided after Consul has been initialized with an encryption key,
 # then the provided key is ignored and a warning will be displayed.
-encrypt = "mnq9VuskJYWOZI+fiZTsX/4uLtiHlw5r48YRDZSHMLg="
+encrypt = "oxFP6MiiCV58b0eeRXfPP7kc5db9wInyvM0zhig2Vxg="
 
 # retry_join
 # Similar to -join but allows retrying a join until it is successful. Once it joins 
