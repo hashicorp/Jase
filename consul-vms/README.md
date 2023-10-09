@@ -288,7 +288,9 @@ encrypt = "mnq9VuskJYWOZI+fiZTsX/4uLtiHlw5r48YRDZSHMLg=
 sudo consul tls ca create
 
 consul tls cert create -server -dc <my dc-name>
+
 Copy Server Agent Certs and CA Cert to Consul Config directory
+
 sudo mkdir -p /consul/config
 sudo mv vm-secondary-server-consul-0* /consul/config/certs
 sudo mv consul-agent-ca.pem /consul/config/certs
@@ -306,6 +308,7 @@ sudo chown -R consul:consul /consul/config/policies
 ```
 
 ```
+export CONSUL_HTTP_ADDR=172.31.27.191:8500 # the private IP address or loopback of exposed server
 export CONSUL_HTTP_TOKEN="<bootstrap_token>"
 export CONSUL_MGMT_TOKEN="<bootstrap_token>"
 ```
