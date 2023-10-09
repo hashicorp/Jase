@@ -72,8 +72,8 @@ advertise_addr = "172.31.18.187"   # "127.0.0.1"
 
 ports = {
   grpc = 8502
-# https = 8501
-# http = -1
+  https = 8501
+  http = -1
   grpc_tls = 8503
   dns = 8600
 }
