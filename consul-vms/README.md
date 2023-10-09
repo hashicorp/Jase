@@ -523,6 +523,11 @@ EOT
 
 ```
 
+![image](https://github.com/hashicorp/Jase/assets/81739850/c8938135-5706-4c2c-98ae-a02f211622ec)
+
+
+
+
 
 Copy the secret id from the node token and run the following command consul acl set-agent-token agent "<node token>"
 
