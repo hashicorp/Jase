@@ -1,12 +1,15 @@
+# this will create the node & register in consul ready  for the service to run on
+
 node_name = "client-dc1-alpha"
 datacenter = "dc1"
 partition = "default"
 
 data_dir = "/consul/data"
 log_level = "INFO"
-retry_join = ["consul-server1-dc1"]
+retry_join = ["172.31.27.191"] # ["consul-server1-dc1"]
+# retry_join = ["consul-server1-dc1"]
 
-encrypt = "oxFP6MiiCV58b0eeRXfPP7kc5db9wInyvM0zhig2Vxg="
+encrypt = "oxFP6MiiCV58b0eeRXfPP7kc5db9wInyvM0zhig2Vxg=" # the gossip key created by the consul server
 
 server = false
 advertise_addr = "10.0.1.252"
@@ -35,7 +38,7 @@ auto_encrypt {
 
 tls {
   defaults {
-    ca_file = "/etc/consul.d/consul-agent-ca.pem"
+    ca_file = "/etc/consul.d/consul-agent-ca.pem" # copy from server1  ca_file
 
     verify_incoming = true
     verify_outgoing = true
