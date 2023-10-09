@@ -24,11 +24,11 @@ peering { enabled = true }
 # not be suitable.
 data_dir = "/consul/data"
 
-#addresses = {
-#  http = "0.0.0.0"
-#  grpc = "0.0.0.0"
-#  grpc_tls = "0.0.0.0"
-#}
+addresses = {
+  http = "0.0.0.0"
+  grpc = "0.0.0.0"
+  grpc_tls = "0.0.0.0"
+}
 
 # client_addr
 # The address to which Consul will bind client interfaces, including the HTTP and DNS
