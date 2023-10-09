@@ -67,7 +67,7 @@ server = true
 bind_addr = "0.0.0.0" # Listen on all IPv4
 #
 # Advertise addr - if you want to point clients to a different address than bind or LB.
-advertise_addr = "172.31.18.187"   # "127.0.0.1"
+advertise_addr = "172.31.27.191"   # "127.0.0.1"
 # advertise_addr_wan = "54.228.176.154"
 
 ports = {
