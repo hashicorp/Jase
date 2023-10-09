@@ -346,6 +346,178 @@ consul acl token create \
   -policy-name node-policy
 ```
 
+
+CREATE A CLIENT VM NODE & SERVICE TO REGISTER INTO THE CONSUL SERVER/CATALOGUE
+
+Install Consul Binary
+Debian-based instructions:
+
+```
+wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/hashicorp.gpg
+chmod go-w /etc/apt/trusted.gpg.d/hashicorp.gpg
+chmod ugo+r /etc/apt/trusted.gpg.d/hashicorp.gpg
+
+apt-add-repository -y "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+
+apt update && apt install -y unzip consul-enterprise jq net-tools
+
+```
+Install Envoy Binary
+VM / Bare metal
+For non-kubernetes, the Envoy binary will need to be acquired and pushed to the workloads. 
+Downloading Envoy binaries can be a lot more challenging than you’d expect.
+get-envoy was the standard, but is now discontinued due to trademark issues.
+
+Debian-based instructions:
+
+
+```
+https://www.envoyproxy.io/docs/envoy/latest/start/install —-> envoy install URL
+
+
+$ sudo apt update
+
+$ sudo apt install apt-transport-https gnupg2 curl lsb-release
+
+
+$ curl -sL 'https://deb.dl.getenvoy.io/public/gpg.8115BA8E629CC074.key' | sudo gpg --dearmor -o /usr/share/keyrings/getenvoy-keyring.gpg
+
+
+# Verify the keyring - this should yield "OK"
+
+$ echo a077cb587a1b622e03aa4bf2f3689de14658a9497a9af2c427bba5f4cc3c4723 /usr/share/keyrings/getenvoy-keyring.gpg | sha256sum --check
+
+
+$ echo "deb [arch=amd64 signed-by=/usr/share/keyrings/getenvoy-keyring.gpg] https://deb.dl.getenvoy.io/public/deb/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/getenvoy.list
+
+
+$ sudo apt update
+
+$ sudo apt install getenvoy-envoy
+
+envoy --version
+
+```
+
+CLIENT AGENT HCL CONFIG FILE
+
+```
+# this will create the node & register in consul ready  for the service to run on
+
+node_name = "client-dc1-alpha"
+datacenter = "dc1"
+partition = "default"
+
+data_dir = "/consul/data"
+log_level = "INFO"
+retry_join = ["172.31.27.191"] # ["consul-server1-dc1"]
+# retry_join = ["consul-server1-dc1"]
+
+encrypt = "oxFP6MiiCV58b0eeRXfPP7kc5db9wInyvM0zhig2Vxg=" # the gossip key created by the consul server ##########
+
+server = false
+advertise_addr = "10.0.1.252"
+bind_addr = "{{ GetDefaultInterfaces | exclude \"type\" \"IPv6\" | attr \"address\" }}"
+client_addr = "0.0.0.0"
+ui = true
+
+telemetry {
+  prometheus_retention_time = "10m"
+  disable_hostname = true
+}
+
+acl {
+  enabled = true
+  default_policy = "deny"
+  enable_token_persistence = true
+  tokens {
+    initial_management = "MyC00lT0ken"
+    agent = "MyC00lT0ken"
+  }
+}
+
+auto_encrypt {
+  tls = true
+}
+
+tls {
+  defaults {
+    ca_file = "/etc/consul.d/consul-agent-ca.pem" ###### copy from server1  ca_file  #########
+
+    verify_incoming = true
+    verify_outgoing = true
+  }
+  internal_rpc {
+    verify_server_hostname = true
+  }
+}
+
+ports = {
+  grpc = 8502
+  https = 8501
+  grpc_tls = 8503
+}
+
+# retry_join = ["provider=aws tag_key=role tag_value=consul-server"]
+```
+
+THE NODE SHOULD NOW BE REGISTERED WITH CONSUL & NOW TO ADD THE SERVICE
+
+```
+# cat file, then copy the output and paste into shell to run mysql Service
+# Install fake-service
+mkdir -p /opt/fake-service
+wget https://github.com/nicholasjackson/fake-service/releases/download/v0.26.0/fake_service_linux_amd64.zip
+unzip -od /opt/fake-service/ fake_service_linux_amd64.zip
+rm -f fake_service_linux_amd64.zip
+chmod +x /opt/fake-service/fake-service
+
+# Configure a service on the VM
+cat <<EOT > /etc/systemd/system/mysql.service
+[Unit]
+Description=mysql
+After=syslog.target network.target
+
+[Service]
+Environment=NAME="mysql"
+Environment=MESSAGE="Product DB MySQL"
+Environment=LISTEN_ADDR="0.0.0.0:3306"
+ExecStart=/opt/fake-service/fake-service
+ExecStop=/bin/sleep 5
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOT
+
+
+
+cat <<EOT > /etc/consul.d/mysql.hcl
+service {
+  name = "mysql"
+  port = 3306
+  tags = ["mysql", "sql", "product", "db"]
+  meta = {
+    product = "MySQL"
+    version = "8.0.34"
+    owner   = "dba@acme.com"
+  } 
+
+  checks = [
+    {
+      name = "SQL Server Check on port 3306"
+      tcp = "127.0.0.1:3306"
+      interval = "10s"
+      timeout = "5s"
+    }
+  ]
+  token = "c57385c9-a1a9-017a-bdf5-74e4241f0d27" # client token or token with permissions
+}
+EOT
+
+```
+
+
 Copy the secret id from the node token and run the following command consul acl set-agent-token agent "<node token>"
 
 On the mesh gateway server run the following commands:
