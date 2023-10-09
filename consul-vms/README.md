@@ -255,6 +255,8 @@ The exported CA cert and key from the  primary, need to be in the same directory
 Consul keygen —---> keep for all servers & clients  # will create a gossip key to use as the encrpt key in the agent file
 encrypt = "mnq9VuskJYWOZI+fiZTsX/4uLtiHlw5r48YRDZSHMLg=
 
+sudo consul tls ca create
+
 consul tls cert create -server -dc <my dc-name>
 Copy Server Agent Certs and CA Cert to Consul Config directory
 sudo mkdir -p /consul/config
