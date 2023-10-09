@@ -11,12 +11,13 @@ Install Consul Binary
 Debian-based instructions:
 
 ```
+wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/hashicorp.gpg
+chmod go-w /etc/apt/trusted.gpg.d/hashicorp.gpg
+chmod ugo+r /etc/apt/trusted.gpg.d/hashicorp.gpg
 
-sudo apt install wget unzip -y
-wget https://releases.hashicorp.com/consul/1.16.2+ent/consul_1.16.2+ent_linux_amd64.zip
-unzip consul_1.16.2+ent_linux_amd64.zip
-sudo mv consul /usr/local/bin
-sudo apt update && sudo apt install consul
+apt-add-repository -y "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+
+apt update && apt install -y unzip consul-enterprise jq net-tools
 
 ```
 Install Envoy Binary
