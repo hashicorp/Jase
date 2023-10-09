@@ -68,7 +68,7 @@ server = true
 #
 # Advertise addr - if you want to point clients to a different address than bind or LB.
 advertise_addr = "172.31.27.191"   # "127.0.0.1"
-# advertise_addr_wan = "54.228.176.154"
+advertise_addr_wan = "34.252.230.154"
 
 ports = {
   grpc = 8502
