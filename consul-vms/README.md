@@ -231,6 +231,8 @@ auto_reload_config = true
 ```
 create an anonymous_policy.hcl (need to be root -----> sudo su -) copy and run in the shell
 
+```
+
 cat <<EOT > /root/anonymous_policy.hcl
 agent_prefix "" {
   policy = "read"
@@ -253,19 +255,6 @@ consul acl policy create -name "anonymous-policy" \
 consul acl token update \
   -id anonymous \
   -policy-name anonymous-policy
-
-```
-consul acl bootstrap
-
-You will see an outbput that looks like this:
-
-AccessorID:   4d123dff-f460-73c3-02c4-8dd64d136e01
-SecretID:     86cddfb9-2760-d947-358d-a2811156bf31
-Description:  Bootstrap Token (Global Management)
-Local:        false
-Create Time:  2018-10-22 11:27:04.479026 -0400 EDT
-Policies:
-   00000000-0000-0000-0000-000000000001 - global-management
 
 ```
 
