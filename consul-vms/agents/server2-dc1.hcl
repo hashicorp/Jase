@@ -1,4 +1,5 @@
 # Copyright (c) HashiCorp, Inc.
+# Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
 # Full configuration options can be found at https://www.consul.io/docs/agent/config
@@ -8,7 +9,7 @@
 # it defaults to "dc1". Consul has first-class support for multiple datacenters, but 
 # it relies on proper configuration. Nodes in the same datacenter should be on a 
 # single LAN.
-node_name = "consul-server1-dc2"
+node_name = "consul-server2-dc1"
 datacenter = "dc1"
 
 log_level = "INFO"
@@ -126,7 +127,7 @@ encrypt = "oxFP6MiiCV58b0eeRXfPP7kc5db9wInyvM0zhig2Vxg="
 #retry_join = ["provider=aws tag_key=... tag_value=..."]
 #retry_join = ["provider=azure tag_name=... tag_value=... tenant_id=... client_id=... subscription_id=... secret_access_key=..."]
 #retry_join = ["provider=gce project_name=... tag_value=..."]
-retry_join = ["172.31.27.191"] 
+retry_join = ["172.31.27.191", "172.31.18.129", "127.31.21.146"] 
 #retry_join = ["172.31.18.187", "172.31.19.0", "172.31.19.109"] 
 
 acl {
