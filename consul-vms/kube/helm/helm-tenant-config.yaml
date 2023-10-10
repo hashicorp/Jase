@@ -26,16 +26,16 @@ global:
   tls:
     enabled: true
     caCert:
-      secretName: consul-gke1-ca-cert 
+      secretName: consul-ca-cert 
       secretKey: tls.crt
     caKey:
-      secretName: consul-gke1-ca-key 
+      secretName: consul-ca-key 
       secretKey: tls.key
 
   acls:
     manageSystemACLs: true
     bootstrapToken:
-      secretName: consul-gke1-partitions-acl-token 
+      secretName: consul-partitions-acl-token 
       secretKey: token
 
 externalServers:
@@ -85,14 +85,14 @@ syncCatalog:
     mirroringK8SPrefix: ""
   # addK8SNamespaceSuffix: false        # Leave this disabled. It's a TRAP!!! if the service name matches the pod name, it'll get stomped.
 
-  apiGateway:
-#   image: "hashicorp/consul-api-gateway:latest"
-    enabled: true
-    image: hashicorp/consul-api-gateway:0.5.4
-    logLevel: debug
-    managedGatewayClass:
-    enabled: true
-    serviceType: LoadBalancer
+# apiGateway:
+#  image: "hashicorp/consul-api-gateway:latest"
+#   enabled: true
+#   image: hashicorp/consul-api-gateway:0.5.4
+#   logLevel: debug
+#   managedGatewayClass:
+#   enabled: true
+#   serviceType: LoadBalancer
 
 terminatingGateways:
   enabled: true
