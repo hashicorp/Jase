@@ -235,6 +235,27 @@ tls {
 auto_reload_config = true
 
 ```
+
+Create Consul Server Agent RPC certificates
+
+The exported CA cert and key from the  primary, need to be in the same directory when running this command:
+
+```
+Consul keygen —---> keep for all servers & clients  # will create a gossip key to use as the encrpt key in the agent file
+encrypt = "mnq9VuskJYWOZI+fiZTsX/4uLtiHlw5r48YRDZSHMLg=
+
+sudo consul tls ca create
+
+consul tls cert create -server -dc <my dc-name>
+
+Copy Server Agent Certs and CA Cert to Consul Config directory
+
+sudo mkdir -p /consul/config
+sudo mv vm-secondary-server-consul-0* /consul/config/certs
+sudo mv consul-agent-ca.pem /consul/config/certs
+```
+
+```
 create an anonymous_policy.hcl (need to be root -----> sudo su -) copy and run in the shell
 
 ```
@@ -283,24 +304,7 @@ Policies:
 
 Copy the secret ID and store this in the environment variables CONSUL_HTTP_TOKEN and CONSUL_MGMT_TOKEN by running folling command. Replace <bootstrap_token> by the token copied above
 
-Create Consul Server Agent RPC certificates
 
-The exported CA cert and key from the  primary, need to be in the same directory when running this command:
-
-```
-Consul keygen —---> keep for all servers & clients  # will create a gossip key to use as the encrpt key in the agent file
-encrypt = "mnq9VuskJYWOZI+fiZTsX/4uLtiHlw5r48YRDZSHMLg=
-
-sudo consul tls ca create
-
-consul tls cert create -server -dc <my dc-name>
-
-Copy Server Agent Certs and CA Cert to Consul Config directory
-
-sudo mkdir -p /consul/config
-sudo mv vm-secondary-server-consul-0* /consul/config/certs
-sudo mv consul-agent-ca.pem /consul/config/certs
-```
 ```
 Change ownership of files to consul (no root or will fail to execute)
 
