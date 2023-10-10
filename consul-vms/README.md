@@ -284,7 +284,6 @@ consul acl token update \
 
 ```
 
-```
 
 Bootstrap DC1 Server Run following command: 
 
