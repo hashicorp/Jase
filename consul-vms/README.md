@@ -242,7 +242,7 @@ The exported CA cert and key from the  primary, need to be in the same directory
 
 ```
 Consul keygen —---> keep for all servers & clients  # will create a gossip key to use as the encrpt key in the agent file
-encrypt = "mnq9VuskJYWOZI+fiZTsX/4uLtiHlw5r48YRDZSHMLg=
+encrypt = "mnq9VuskJYWOZI+fiZTsX/4uLtiHlw5r48YRDZSHMLg="
 
 sudo consul tls ca create
 
@@ -253,6 +253,27 @@ Copy Server Agent Certs and CA Cert to Consul Config directory
 sudo mkdir -p /consul/config
 sudo mv vm-secondary-server-consul-0* /consul/config/certs
 sudo mv consul-agent-ca.pem /consul/config/certs
+```
+
+```
+Change ownership of files to consul (no root or will fail to execute)
+
+Copy enterprise license contents to: /etc/consul.d/consul.hclic
+
+sudo chown -R consul:consul /consul
+sudo chown -R consul:consul /etc/consul.d
+sudo chown -R consul:consul /consul/config
+sudo chown -R consul:consul /consul/config/certs
+sudo chown -R consul:consul /consul/config/policies
+```
+# START CONSUL
+
+```
+systemctl enable consul
+
+sudo systemctl consul start or sudo consul agent -config-dir=/etc/consul.d/
+sudo systemctl consul status
+
 ```
 
 ```
@@ -305,17 +326,7 @@ Policies:
 Copy the secret ID and store this in the environment variables CONSUL_HTTP_TOKEN and CONSUL_MGMT_TOKEN by running folling command. Replace <bootstrap_token> by the token copied above
 
 
-```
-Change ownership of files to consul (no root or will fail to execute)
 
-Copy enterprise license contents to: /etc/consul.d/consul.hclic
-
-sudo chown -R consul:consul /consul
-sudo chown -R consul:consul /etc/consul.d
-sudo chown -R consul:consul /consul/config
-sudo chown -R consul:consul /consul/config/certs
-sudo chown -R consul:consul /consul/config/policies
-```
 
 ```
 export CONSUL_HTTP_ADDR=172.31.27.191:8500 # the private IP address or loopback of exposed server
@@ -355,6 +366,53 @@ consul acl token create \
   -description "node token” \
   -policy-name node-policy
 ```
+
+## Installing Consul on 2nd & 3rd Server VM´s with full zero trust and TLS. 
+
+the 2nd and 3rd server config can be found in this repo ----> link shown below
+
+```
+https://github.dev/hashicorp/Jase/tree/main/consul-vms
+
+Update the encrpyt key that you got from the bootstrap command for server 1 and  within the hcl config file update ----> encrypt = "mnq9VuskJYWOZI+fiZTsX/4uLtiHlw5r48YRDZSHMLg=
+
+copy the certificates that you created with server 1 and put them in the certificat location that you created
+
+    ca_file = "/consul/config/certs/consul-agent-ca.pem"
+    cert_file = "/consul/config/certs/dc1-server-consul-0.pem"
+    key_file = "/consul/config/certs/dc1-server-consul-0-key.pem"
+
+
+update the ownerership of the directories to consul
+
+sudo chown -R consul:consul /consul
+sudo chown -R consul:consul /etc/consul.d
+sudo chown -R consul:consul /consul/config
+sudo chown -R consul:consul /consul/config/certs
+
+```
+# REPEAT FOR SERVER 3
+
+
+# START CONSUL FOR SERVER 2 & 3
+
+```
+systemctl enable consul
+
+sudo systemctl consul start or sudo consul agent -config-dir=/etc/consul.d/
+sudo systemctl consul status
+
+```
+
+# RETURN TO SERVER 1
+# WITHIN CONSUL.HCL CHANGE BOOSTRAP-EXPECT =3 FROM 1 
+# WITHIN CONSUL.HCL CHANGE retry_join = ["172.31.27.191"], "172.31.18.129", "172.31.21.146"]  INCLUDE ALL 3 SERVERS
+
+```
+change to directory ----> /etc/consul.d/
+consul reload
+```
+
 
 
 CREATE A CLIENT VM NODE & SERVICE TO REGISTER INTO THE CONSUL SERVER/CATALOGUE
