@@ -1,0 +1,20 @@
+######## Within /etc/systemd/system directory create an envoy connection to the local IP address of this VM (not your consul server VM)
+
+[Unit]
+Description=Consul Mesh Gateway
+After=syslog.target network.target
+
+[Service]
+Environment=CONSUL_HTTP_TOKEN=066d0728-8ba6-6104-9bac-fa536d25c140
+ExecStart=/usr/bin/consul connect envoy -mesh-gateway -register -address 172.31.19.107:443 -wan-address 172.31.19.107:443
+ExecStop=/bin/sleep 5
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+######## once file saved
+#### systemctl daemon-reload
+###  systemctl enable mesh-gateway-Service
+###  systemctl start  mesh-gateway-Service
+###  journalctl -u mesh-gateway-Service 
