@@ -391,6 +391,11 @@ CREATE A CLIENT VM NODE & SERVICE TO REGISTER INTO THE CONSUL SERVER/CATALOGUE
 Install Consul Binary
 Debian-based instructions:
 
+- Install consul client
+
+Install Consul Binary & Envoy Binary plus toolsets
+Debian-based instructions:
+
 ```
 wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/hashicorp.gpg
 chmod go-w /etc/apt/trusted.gpg.d/hashicorp.gpg
@@ -398,42 +403,9 @@ chmod ugo+r /etc/apt/trusted.gpg.d/hashicorp.gpg
 
 apt-add-repository -y "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 
-apt update && apt install -y unzip consul-enterprise jq net-tools
+apt update && apt install -y unzip consul-enterprise hashicorp-envoy jq net-tools
 
-```
-Install Envoy Binary
-VM / Bare metal
-For non-kubernetes, the Envoy binary will need to be acquired and pushed to the workloads. 
-Downloading Envoy binaries can be a lot more challenging than you’d expect.
-get-envoy was the standard, but is now discontinued due to trademark issues.
-
-Debian-based instructions:
-
-
-```
-https://www.envoyproxy.io/docs/envoy/latest/start/install —-> envoy install URL
-
-
-$ sudo apt update
-
-$ sudo apt install apt-transport-https gnupg2 curl lsb-release
-
-
-$ curl -sL 'https://deb.dl.getenvoy.io/public/gpg.8115BA8E629CC074.key' | sudo gpg --dearmor -o /usr/share/keyrings/getenvoy-keyring.gpg
-
-
-# Verify the keyring - this should yield "OK"
-
-$ echo a077cb587a1b622e03aa4bf2f3689de14658a9497a9af2c427bba5f4cc3c4723 /usr/share/keyrings/getenvoy-keyring.gpg | sha256sum --check
-
-
-$ echo "deb [arch=amd64 signed-by=/usr/share/keyrings/getenvoy-keyring.gpg] https://deb.dl.getenvoy.io/public/deb/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/getenvoy.list
-
-
-$ sudo apt update
-
-$ sudo apt install getenvoy-envoy
-
+consul --version
 envoy --version
 
 ```
@@ -559,45 +531,88 @@ EOT
 ![image](https://github.com/hashicorp/Jase/assets/81739850/c8938135-5706-4c2c-98ae-a02f211622ec)
 
 
-
+# MESH GATEWAY SERVER CONFIGURATION 
 
 
 Copy the secret id from the node token and run the following command consul acl set-agent-token agent "<node token>"
 
-On the mesh gateway server run the following commands:
-Replace with the ndoe token created above
-Replace with the encryption key found on dc-1-server
+
+Install Consul Binary & Envoy Binary plus toolsets
+Debian-based instructions:
 
 ```
-sudo tee /etc/consul.d/consul.hcl > /dev/null << EOF
-datacenter = "dc-1"
+wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/hashicorp.gpg
+chmod go-w /etc/apt/trusted.gpg.d/hashicorp.gpg
+chmod ugo+r /etc/apt/trusted.gpg.d/hashicorp.gpg
+
+apt-add-repository -y "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+
+apt update && apt install -y unzip consul-enterprise hashicorp-envoy jq net-tools
+
+consul --version
+envoy --version
+
+```
+
+On the mesh gateway server run the following commands:
+Use the node token created above
+Use the encryption key we have used from all the above servers & clients
+
+```
+node_name = "client-dc1-mgw"
+datacenter = "dc1"
+partition = "default"
+
+license_path = "/etc/consul.d/consul.hclic"
+
 connect = {
   enabled = true
 }
-data_dir = "/opt/consul/data"
-log_level = "DEBUG"
-retry_join = ["provider=aws tag_key=consulserver tag_value=yes"]
-ca_file = "/opt/consul/tls/consul-agent-ca.pem"
-verify_incoming = false
-verify_outgoing = true
-verify_server_hostname = true
-auto_encrypt = {
-  tls = true
-}
+
+data_dir = "/consul/data"
+log_level = "INFO"
+retry_join = ["172.31.27.191"]
+
+encrypt = "oxFP6MiiCV58b0eeRXfPP7kc5db9wInyvM0zhig2Vxg="
+
 acl {
-  enabled        = true
+  enabled = true
   default_policy = "deny"
   down_policy    = "extend-cache"
+  tokens {
+    agent = "f4b5a78d-6f57-cce2-8fcb-b0a418ceb2c3"
+    default = "f4b5a78d-6f57-cce2-8fcb-b0a418ceb2c3"
+  }
 }
+
 ports {
  grpc = 8502
 }
-encrypt = "<encryption key>"
-EOF
+
+
+auto_encrypt = {
+  tls = true
+}
+
+tls {
+  defaults {
+    ca_file = "/consul/config/certs/consul-agent-ca.pem"
+
+    verify_incoming = false
+    verify_outgoing = true
+  }
+  internal_rpc {
+    verify_server_hostname = true
+  }
+}
+
+auto_reload_config = true
+
+
 ```
 
 In order for a mesh-gateway to register itself as a service it needs to have a token that allows it to do so.
-sudo tee /opt/consul/policies/mgw.hcl > /dev/null << EOF
+sudo tee /consul/policies/mgw.hcl > /dev/null << EOF
 
 ```
 agent_prefix "" {
@@ -625,15 +640,28 @@ consul acl token create \
   -description “mgw token" \
   -policy-name mgw-policy
 ```
+
+ensure all directories & files are consul owned
+
+```
+sudo chown -R consul:consul /consul/policies
+```
+
+
+
 You will need the secret id (token) from that last command in a later step.
 
 We will now set a default config for the services in across all DC´s to use the local meshgateway as a default. There are other options here. TODO: Add link
 Run the following command
 
 ```
-sudo tee /opt/policies/default-policy.hcl > /dev/null << "EOF"
 Kind = "proxy-defaults"
 Name = "global"
+
+Config {
+  protocol = "http"
+}
+
 MeshGateway {
    Mode = "local"
 }
@@ -641,51 +669,54 @@ EOF
 ```
 
 ```
-consul config write /opt/policies/default-policy.hcl
+consul config write /consul/policies/proxy-defaults-policy.hcl
 ```
 
 We are now ready to start the envoy.
 We will first set some environment variables which will be used by the systemd service.
 
-Run the following command: Change the by the internal IP of the server for DC1
-
-```
-sudo tee /etc/consul.d/envoy.env > /dev/null << "EOF"
-CONSUL_CACERT=/opt/consul/tls/consul-agent-ca.pem
-CONSUL_HTTP_SSL=true
-CONSUL_HTTP_ADDR=<dc-1-server-ip>:8501
-```
 
 Now create the systemd service by running following command. Change by the token create in step 6 above.
 
+######## Within /etc/systemd/system directory create an envoy connection to the local IP address of this VM (not your consul server VM)
+
 ```
-sudo tee /etc/systemd/system/envoy.service > /dev/null << "EOF"
+sudo tee /etc/systemd/system/mesh-gateway.service > /dev/null << "EOF"
+
+
 [Unit]
-Description=Envoy
-After=network-online.target
-Wants=consul.service
+Description=Consul Mesh Gateway
+After=syslog.target network.target
+
 [Service]
-EnvironmentFile=/etc/consul.d/envoy.env
-ExecStart=/usr/bin/consul connect envoy -expose-servers -gateway=mesh -register -service "mesh-gateway” -address "10.0.4.206:443" -wan-address "15.237.122.152:443" -token 76a0dc42-7c0c-b8d9-7383-283be4dd2039 -tls-server-name “server.dc1.consul" -- -l debug
+Environment=CONSUL_HTTP_TOKEN=066d0728-8ba6-6104-9bac-fa536d25c140
+ExecStart=/usr/bin/consul connect envoy -mesh-gateway -register -address 172.31.19.107:443 -wan-address 172.31.19.107:443
+ExecStop=/bin/sleep 5
 Restart=always
-RestartSec=5
-StartLimitIntervalSec=0
+
 [Install]
 WantedBy=multi-user.target
+
 EOF
 ```
 
 ```
-sudo systemctl enable envoy.service
-sudo systemctl start envoy.service
+######## once file saved
+
+systemctl daemon-reload
+systemctl enable mesh-gateway-Service
+systemctl start  mesh-gateway-Service
+journalctl -u mesh-gateway-Service
 
 ```
 
 Check the good functioning of the service by running 
 ```
-journalctl -e -u consul and journalctl -e -u envoy
+journalctl -e -u consul and journalctl -e -u  mesh-gateway-Service
 ```
 
 Also log in to the consul UI and check that all services are healthy and green :)
+
+GOOD JOB ALL 😁😁😁😁😁👌
 
 
