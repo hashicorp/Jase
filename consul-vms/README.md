@@ -5,7 +5,7 @@
 #   Consul POC Guide
 
 
-
+![image](https://github.com/hashicorp/Jase/assets/81739850/f7cd24ef-5e80-4d3c-9f4c-e7ce54038294)
 
 - Install consul client
 
