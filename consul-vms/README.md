@@ -265,6 +265,10 @@ sudo chown -R consul:consul /etc/consul.d
 sudo chown -R consul:consul /consul/config
 sudo chown -R consul:consul /consul/config/certs
 sudo chown -R consul:consul /consul/config/policies
+
+export CONSUL_HTTP_ADDR=https://127.0.0.1:8501 # or 8500 (TLS or not)
+export CONSUL_HTTP_TOKEN=mnq9VuskJYWOZI+fiZTsX/4uLtiHlw5r48YRDZSHMLg=
+
 ```
 # START CONSUL
 
