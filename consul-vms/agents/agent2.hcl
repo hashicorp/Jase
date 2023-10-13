@@ -1,4 +1,4 @@
-node_name = "client-dc1-alpha"
+node_name = "client-dc2"
 datacenter = "dc1"
 partition = "default"
 
