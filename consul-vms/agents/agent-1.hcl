@@ -12,7 +12,7 @@ retry_join = ["172.31.27.191"] # ["consul-server1-dc1"]
 encrypt = "oxFP6MiiCV58b0eeRXfPP7kc5db9wInyvM0zhig2Vxg=" # the gossip key created by the consul server
 
 server = false
-advertise_addr = "172.31.26.58"
+advertise_addr = "172.31.26.58" # local IP address of client
 bind_addr = "{{ GetDefaultInterfaces | exclude \"type\" \"IPv6\" | attr \"address\" }}"
 client_addr = "0.0.0.0"
 ui = true
