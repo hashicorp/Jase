@@ -706,9 +706,9 @@ EOF
 ######## once file saved
 
 systemctl daemon-reload
-systemctl enable mesh-gateway-Service
-systemctl start  mesh-gateway-Service
-journalctl -u mesh-gateway-Service
+systemctl enable mesh-gateway.service
+systemctl start  mesh-gateway.service
+journalctl -u mesh-gateway.service
 
 ```
 
