@@ -97,7 +97,7 @@ ingressGateways:
       service:
         type: 'NodePort'
         ports:
-#         - port: 3000
+          - port: 3000
           nodePort: 3000
 
   wanAddress:
