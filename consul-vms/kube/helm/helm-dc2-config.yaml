@@ -95,9 +95,10 @@ ingressGateways:
   gateways:
     - name: ingress-gateway
       service:
-        type: 'LoadBalancer'
+        type: 'NodePort'
         ports:
-          - port: 8080
+#         - port: 3000
+          nodePort: 3000
 
   wanAddress:
     source: Service
@@ -109,7 +110,11 @@ meshGateway:
   replicas: 1
 # service:
 #   enabled: true
-#   type: 'LoadBalancer'
+    type: 'NodePort'
+    ports:
+      - port:4000
+        nodePort: 4000
+
 # wanAddress:
 #   source: Service
 #       annotations: |
@@ -122,13 +127,9 @@ ui:
   enabled: true
   metrics:
     enabled: true # by default, this inherits from the value global.metrics.enabled
-#    dashboardURLTemplates:
-#        service: "https://dcr22597.live.dynatrace.com/ui/kubernetes?gtf=-2h&gf=all&entitySelector="
-    provider: "prometheus"
-    baseURL: http://prometheus-server
   service:
     enabled: true
-    type: LoadBalancer
+    type: NodePort
 
 prometheus:
  enabled: true
