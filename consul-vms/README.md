@@ -421,6 +421,8 @@ node_name = "client-dc1-alpha"
 datacenter = "dc1"
 partition = "default"
 
+license_path = "/etc/consul.d/consul.hclic"
+
 data_dir = "/consul/data"
 log_level = "INFO"
 retry_join = ["172.31.27.191"] # ["consul-server1-dc1"]
