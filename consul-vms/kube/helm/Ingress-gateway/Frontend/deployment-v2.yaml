@@ -21,13 +21,13 @@ spec:
       annotations:
         consul.hashicorp.com/connect-inject: "true"
         consul.hashicorp.com/connect-service: "frontend"
-        consul.hashicorp.com/service-tags: v1.2-amd64, frontend-v2
+        consul.hashicorp.com/service-tags: v1.6-amd64, frontend-v2
         # consul.hashicorp.com/connect-service-upstreams: "backend:9090"
     spec:
       serviceAccountName: frontend
       containers:
         - name: frontend
-          image: hcdcanadillas/pydemo-front:v1.2-amd64
+          image: hcdcanadillas/pydemo-front:v1.6-amd64
           imagePullPolicy: Always
           ports:
             - name: http
