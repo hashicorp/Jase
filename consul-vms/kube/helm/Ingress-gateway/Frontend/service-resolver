@@ -6,6 +6,6 @@ spec:
   defaultSubset: v1
   subsets:
     v1:
-      filter: '"v1.1-amd64" in Service.Tags'
+      filter: '"v1.5-amd64" in Service.Tags'
     v2:
-      filter: '"v1.2-amd64" in Service.Tags'
+      filter: '"v1.6-amd64" in Service.Tags'
