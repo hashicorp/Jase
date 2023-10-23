@@ -114,11 +114,16 @@ you will now see the 2 different versions of service loadbalance every other req
 
 ### Version 1
 
+
 ![image](https://github.com/hashicorp/Jase/assets/81739850/4f4db51b-d272-41e9-9da8-47b455cddc71)
+
 
 ### Version 2
 
+
 ![image](https://github.com/hashicorp/Jase/assets/81739850/c4c36f9d-4fcc-4e40-903f-e542df9bcbac)
+
+
 
 if you delete v1 in Frontend directory you will see it will only stay on v2 😁😁😁😁
 
