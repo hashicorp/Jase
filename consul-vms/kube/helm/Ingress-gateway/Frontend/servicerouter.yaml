@@ -1,0 +1,12 @@
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceRouter
+metadata:
+  name: frontend
+spec:
+  routes:
+    - match:
+        http:
+          pathPrefix: "/v2"
+      destination:
+        prefixRewrite: "/"
+        serviceSubset: "v2"

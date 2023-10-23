@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  labels:
+    myapp: jase-demo
+    tier: front
+spec:
+  selector:
+    myapp: jase-demo
+    tier: front
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: http
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: frontend
+  labels:
+    app: jase-demo
+    tier: front
