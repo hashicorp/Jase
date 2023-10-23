@@ -112,11 +112,11 @@ Open up browser with local port and port 8080
 ```
 you will now see the 2 different versions of service loadbalance every other request as shown below
 
-Version 1
+### Version 1
 
 ![image](https://github.com/hashicorp/Jase/assets/81739850/4f4db51b-d272-41e9-9da8-47b455cddc71)
 
-Version 2
+### Version 2
 
 ![image](https://github.com/hashicorp/Jase/assets/81739850/c4c36f9d-4fcc-4e40-903f-e542df9bcbac)
 
