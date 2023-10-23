@@ -88,20 +88,33 @@ terminatingGateways:
 #          - key: key
 #            path: rds-combined-ca-bundle.pem # secret will now mount to /consul/userconfig/my-secret/path
 
-
-
 ingressGateways:
+  defaults:
+    replicas: 1
+    service:
+      ports:
+      - nodePort: null
+        port: 443
+      - nodePort: null
+        port: 8080
+      type: 'NodePort' # need to use NodePort as no external connectivity # LoadBalancer
   enabled: true
   gateways:
-    - name: ingress-gateway
-      service:
-        type: 'NodePort'
-        ports:
-          - port: 3000
-          nodePort: 3000
+  - name: ingress-gateway
 
-  wanAddress:
-    source: Service
+
+#ingressGateways:
+#  enabled: true
+#  gateways:
+#    - name: ingress-gateway
+#      service:
+#        type: 'NodePort'
+#        ports:
+#          - port: 3000
+#          nodePort: 3000
+#
+#  wanAddress:
+#   source: Service
 #       annotations: |
 #         'service.beta.kubernetes.io/aws-load-balancer-internal': "false"
 
