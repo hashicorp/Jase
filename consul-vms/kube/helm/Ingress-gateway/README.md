@@ -91,6 +91,46 @@ acess the service ingress gateway and select the upstream tab, you will now see 
 
 ![image](https://github.com/hashicorp/Jase/assets/81739850/c284640a-c560-4453-90a9-3e5213d71a17)
 
+Deploy Backend directory that will provision the Backend service
+
+```
+kubectl apply -f backend/
+
+```
+
+The list of service you will see in the top screenshot of services. Once this has been deployed you can now portforward the ingress gateway service and listening port 8080
+
+```
+kubectl port-forward svc/consul-ingress-gateway --namespace consul 8080:8080
+
+```
+Open up browser with local port and port 8080
+
+```
+127.0.0.1:8080
+
+```
+you will now see the 2 different versions of service loadbalance every other request as shown below
+
+Version 1
+
+![image](https://github.com/hashicorp/Jase/assets/81739850/4f4db51b-d272-41e9-9da8-47b455cddc71)
+
+Version 2
+
+![image](https://github.com/hashicorp/Jase/assets/81739850/c4c36f9d-4fcc-4e40-903f-e542df9bcbac)
+
+if you delete v1 in Frontend directory you will see it will only stay on v2 😁😁😁😁
+
+
+```
+kubectl delete -f deployment-v1.yaml
+
+```
+
+INGRESS GATEWAY TESTED...............GOOD JOB ALL 😁😁😁😁😁👌...................
+
+
 
 
 
