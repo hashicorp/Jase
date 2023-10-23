@@ -4,6 +4,12 @@
 
 #   Ingress Gateway instructions Guide
 
+#   There are 2 docker images that need to be uploaded into your repo, they can be located here
+     
+    https://hub.docker.com/r/hcdcanadillas/pydemo-front/
+
+    v1.5 & v1.6
+
 
 ![image](https://github.com/hashicorp/Jase/assets/81739850/f7cd24ef-5e80-4d3c-9f4c-e7ce54038294)
 
