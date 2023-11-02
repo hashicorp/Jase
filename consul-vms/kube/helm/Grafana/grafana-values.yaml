@@ -1,0 +1,33 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
+adminPassword: password
+
+rbac:
+  create: false
+  pspEnabled: false
+
+# Disable test pods
+testFramework:
+  enabled: false
+
+podLabels:
+  app: grafana
+
+podAnnotations:
+  "consul.hashicorp.com/connect-inject": "false"
+
+service:
+  port: 3000
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Prometheus
+      namespace: consul
+      type: prometheus
+      url: http://prometheus-server
+#     url: http://prometheus-server.consul.svc.cluster.local
+      access: proxy
+      isDefault: true
