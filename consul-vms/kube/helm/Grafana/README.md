@@ -49,6 +49,12 @@ NOTES:
 
 ```
 
+apply traffic to the service to show some metrics in the dashboard
+
+```
+kubectl apply -f traffic.yaml
+
+```
 
 
 Add consul into Grafana dashboard with instructions below:
