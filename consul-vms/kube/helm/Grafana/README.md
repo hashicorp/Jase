@@ -55,12 +55,14 @@ Add consul into Grafana dashboard with instructions below:
 
 Once you have logged into the Grafana UI, hover over the dashboards icon (four squares in the left-hand menu), and then click the Browse option.
 
-![Alt text](image-1.png)
+![Alt text](image.png)
 
 This will take you to a page that gives you some choices about how to upload Grafana dashboards. Click the Import button on the right-hand side of the screen. Open the file in the grafana subdirectory named hashicups-dashboard.json (this file is in the Grafan directory in this repo) and copy the contents into the JSON window of the Grafana UI. 
 
 Click through the rest of the options, and you will end up with a dashboard waiting for data to display. Make sure prometheus as input
 
 ![Alt text](image-2.png)
+
+
 
 
