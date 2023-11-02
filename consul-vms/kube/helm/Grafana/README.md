@@ -57,53 +57,10 @@ Once you have logged into the Grafana UI, hover over the dashboards icon (four s
 
 ![Alt text](image-1.png)
 
+This will take you to a page that gives you some choices about how to upload Grafana dashboards. Click the Import button on the right-hand side of the screen. Open the file in the grafana subdirectory named hashicups-dashboard.json (this file is in the Grafan directory in this repo) and copy the contents into the JSON window of the Grafana UI. 
+
+Click through the rest of the options, and you will end up with a dashboard waiting for data to display. Make sure prometheus as input
+
+![Alt text](image-2.png)
 
 
-ingressGateways:
-  defaults:
-    replicas: 1
-    service:
-      ports:
-      - nodePort: null
-        port: 443
-      - nodePort: null
-        port: 8080
-      type: LoadBalancer
-  enabled: true
-  gateways:
-  - name: ingress-gateway
-
-save config and upgrade helm chart with new ingress gateway bloxk (if required)
-
-helm upgrade --install -f config-dc1.yaml consul hashicorp/consul -n consul --debug 
-once completed check pods and service have been built
-
-kubectl get pods -n consul
-
-kubectl get svc -n consul
-image
-
-image
-
-STEP BY STEP GUIDE on Installing Ingress Gateway.
-This guide describes the following definitions and services needed :
-
-Frontend service deployment
-Backend service deployment
-Ingress config.
-service defaults
-service router
-service resolver
-Default Deny as default
-intention
-port-forward ingress-gateway service
-Setup steps
-Deploy Frontend directory that will provision all the service above apart from the Backend services
-
-kubectl apply -f Frontend/
-
-image
-
-Frontend service will deploy alongside your other services that you have already deployed.
-
-The frontend service will have 2 services deployed a v1 and v2 to loadbalance the traffic and you will also see that the resolver only against frontend
