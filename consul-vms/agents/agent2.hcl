@@ -14,6 +14,10 @@ bind_addr = "{{ GetDefaultInterfaces | exclude \"type\" \"IPv6\" | attr \"addres
 client_addr = "0.0.0.0"
 ui = true
 
+connect {
+  enabled = true
+} 
+
 telemetry {
   prometheus_retention_time = "10m"
   disable_hostname = true
