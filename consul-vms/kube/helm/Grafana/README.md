@@ -1,3 +1,6 @@
+![Alt text](image-3.png)
+
+
 Disclaimer: This setup is for POC purposes and not fit for production
 
 Grafana instructions Guide
