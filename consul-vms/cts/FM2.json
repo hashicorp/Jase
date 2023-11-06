@@ -1,0 +1,7 @@
+{
+    "service": {
+      "name": "FM2-Jason",
+      "id": "fortinet-service-s1-jase",
+      "address": "32.32.0.0"
+    }
+  }
