@@ -42,11 +42,12 @@ and the service instances within the service group
 within in one tab run the consul-terraform-sync command and this will them monitor for changes in consul and sync to fortimanager
 
 ```
-consul-terraform-sync -config-file task.hcl
+consul-terraform-sync start -config-file task.hcl
 ```
 you will see that cts is no watching and waiting for changes
 
-![Alt text](image-3.png)
+![Alt text](image-4.png)
+
 
 open a second shell and register services and you will see the changes being applies in the cts logs and also within the Fortimanager
 
