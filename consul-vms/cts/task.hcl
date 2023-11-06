@@ -29,6 +29,8 @@ task {
   description = "Dynamic manage FortiManager Firewall address and address group by Consul_Terraform_Sync"
   module = "fortinetdev/cts-agpu/fortimanager" # to be updated
   providers = ["fortimanager"]
-  services = ["FM2-Jason"]
+  condition "services" {
+  names = ["FM2-Jason"]
+ }
+# services = ["FM2-Jason"]
   variable_files = ["./consul_test.tfvars"]
-}
