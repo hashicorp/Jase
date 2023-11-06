@@ -27,7 +27,7 @@ terraform_provider "fortimanager" {
 task {
   name = "CTS-FM2"
   description = "Dynamic manage FortiManager Firewall address and address group by Consul_Terraform_Sync"
-  source = "fortinetdev/cts-agpu/fortimanager" # to be updated
+  module = "fortinetdev/cts-agpu/fortimanager" # to be updated
   providers = ["fortimanager"]
   services = ["FM2-Jason"]
   variable_files = ["./consul_test.tfvars"]
