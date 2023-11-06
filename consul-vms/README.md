@@ -405,10 +405,11 @@ chmod ugo+r /etc/apt/trusted.gpg.d/hashicorp.gpg
 
 apt-add-repository -y "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 
-apt update && apt install -y unzip consul-enterprise hashicorp-envoy jq net-tools
+apt update && apt install -y unzip consul-enterprise hashicorp-envoy consul-terraform-sync-enterprise jq net-tools
 
 consul --version
 envoy --version
+consul-terraform-sync --version
 
 ```
 
