@@ -44,7 +44,7 @@ within in one tab run the consul-terraform-sync command and this will them monit
 ```
 consul-terraform-sync start -config-file task.hcl
 ```
-you will see that cts is no watching and waiting for changes
+you will see that cts is now watching and waiting for changes
 
 ![Alt text](image-4.png)
 
