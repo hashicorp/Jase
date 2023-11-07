@@ -34,3 +34,5 @@ task {
  }
 # services = ["FM2-Jason"]
   variable_files = ["./consul_test.tfvars"]
+
+}
