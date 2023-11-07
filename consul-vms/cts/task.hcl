@@ -1,8 +1,13 @@
 log_level = "info"
+# working_dir = "sync-tasks"
 
 consul {
   address = "34.252.230.154:8500"
 # token   = "my-consul-acl-token"
+
+  service_registration { ### if you do not want cts registered in the UI as a service and also catalog
+   enabled = false
+  }
 }
 
 driver "terraform" {
