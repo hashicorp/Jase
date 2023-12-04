@@ -313,7 +313,7 @@ Before we can install and register any new node we need to create a node policy.
 
 ```
 sudo mkdir /opt/consul/policies
-sudo tee /opt/policies/nodepolicy.hcl > /dev/null << EOF
+sudo tee /opt/consul/policies/nodepolicy.hcl > /dev/null << EOF
 agent_prefix "" {
   policy = "write"
 }
@@ -332,7 +332,7 @@ EOF
 consul acl policy create \
   -token=${CONSUL_MGMT_TOKEN} \
   -name node-policy \
-  -rules @/opt/policies/nodepolicy.hcl
+  -rules @/opt/consul/policies/nodepolicy.hcl
 
 consul acl token create \
   -token=${CONSUL_MGMT_TOKEN} \
