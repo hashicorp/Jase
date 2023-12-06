@@ -244,8 +244,8 @@ export CONSUL_HTTP_TOKEN=mnq9VuskJYWOZI+fiZTsX/4uLtiHlw5r48YRDZSHMLg=
 ```
 systemctl enable consul
 
-sudo systemctl consul start or sudo consul agent -config-dir=/etc/consul.d/
-sudo systemctl consul status
+sudo systemctl start consul  or sudo consul agent -config-dir=/etc/consul.d/
+sudo systemctl status consul 
 
 ```
 
@@ -372,8 +372,8 @@ sudo chown -R consul:consul /consul/config/certs
 ```
 systemctl enable consul
 
-sudo systemctl consul start or sudo consul agent -config-dir=/etc/consul.d/
-sudo systemctl consul status
+sudo systemctl start consul  or sudo consul agent -config-dir=/etc/consul.d/
+sudo systemctl status  consul 
 
 ```
 
