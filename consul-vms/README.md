@@ -338,6 +338,10 @@ consul acl token create \
   -token=${CONSUL_MGMT_TOKEN} \
   -description "node token” \
   -policy-name node-policy
+
+consul info
+
+http://52.49.0.68:8500/  ##### WAN address
 ```
 
 ## Installing Consul on 2nd & 3rd Server VM´s with full zero trust and TLS. 
