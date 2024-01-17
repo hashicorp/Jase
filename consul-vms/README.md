@@ -215,12 +215,12 @@ encrypt = "mnq9VuskJYWOZI+fiZTsX/4uLtiHlw5r48YRDZSHMLg="
 
 sudo consul tls ca create
 
-consul tls cert create -server -dc <my dc-name>
+consul tls cert create -server -dc <my dc-name> ###### usually dc1
 
 Copy Server Agent Certs and CA Cert to Consul Config directory
 
 sudo mkdir -p /consul/config
-sudo mv vm-secondary-server-consul-0* /consul/config/certs
+sudo mv dc1-server-consul-0* /consul/config/certs
 sudo mv consul-agent-ca.pem /consul/config/certs
 ```
 
