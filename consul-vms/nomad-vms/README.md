@@ -5,6 +5,76 @@ NOMAD Integration into Consul POC Guide
 
 ![Alt text](image.png)
 
+STEP 1 - Setup ACL & Policies on Consul server VM first
+
+```
+consul acl token create -node-identity 'host01:dc1'
+
+AccessorID:       18ddc57f-72e6-2b4f-9b20-b8c8d58d41d7
+SecretID:         e7fc8ebd-8234-2316-15fe-f59d4f7a5463
+Description:
+Local:            false
+Create Time:      2023-11-15 18:06:59.674682 -0500 EST
+Node Identities:
+   host01 (Datacenter: dc1)
+
+
+consul acl set-agent-token agent <SecretID> AS ABOVE line 14
+
+ACL token "agent" set successfully
+
+### Create a file named consul-policy-nomad-agents.hcl to store the Consul ACL rules that grant the necessary permissions to Nomad agents. 
+### Add the following contents to it and save the file
+
+consul-policy-nomad-agents.hcl
+
+agent_prefix "" {
+  policy = "read"
+}
+
+node_prefix "" {
+  policy = "read"
+}
+
+service_prefix "" {
+  policy = "write"
+}
+
+### Create a Consul ACL policy named nomad-agents with the rules defined in the consul-policy-nomad-agents.hcl file
+
+consul acl policy create -name 'nomad-agents' -description 'Policy for Nomad agents' -rules '@consul-policy-nomad-agents.hcl'
+ID:           7a0fe00b-f7e6-809c-2227-bb0638b873bd
+Name:         nomad-agents
+Description:  Policy for Nomad agents
+Datacenters:
+Rules:
+agent_prefix "" {
+  policy = "read"
+}
+
+node_prefix "" {
+  policy = "read"
+}
+
+service_prefix "" {
+  policy = "write"
+}
+
+
+
+consul acl token create -policy-name 'nomad-agents'
+AccessorID:       3f436657-823a-95e3-4755-79f3e1e43c8e
+SecretID:         df179fd2-3211-3641-5901-a57331c14611
+Description:
+Local:            false
+Create Time:      2023-11-15 18:23:39.572365 -0500 EST
+Policies:
+   a5ee20ed-7158-89be-9a19-be213d106d24 - nomad-agents
+
+### Save the value of SecretID for the Consul ACL token. You will use it below to configure Nomad
+
+```
+
 Install Nomad client
 Install Nomad Binary &  plus toolsets Debian-based instructions:
 
