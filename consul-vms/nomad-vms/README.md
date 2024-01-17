@@ -5,6 +5,8 @@ NOMAD Integration into Consul POC Guide
 
 ![Alt text](image.png)
 
+![Alt text](image-1.png)
+
 STEP 1 - Setup ACL & Policies on Consul server VM first
 
 ```
