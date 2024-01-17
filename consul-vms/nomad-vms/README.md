@@ -27,6 +27,5 @@ nomad --version
 ```
 systemctl daemon-reload
 systemctl enable nomad --now
-systemctl enable docker --now
 
 ```
