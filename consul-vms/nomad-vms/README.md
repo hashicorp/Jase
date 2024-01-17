@@ -183,7 +183,7 @@ Roles        = n/a
 ```
 
 export NOMAD_TOKEN=df6d3b3f-44d9-f774-24cd-a3e7c3953a7f
-export NOMAD_ADDR=34.250.234.108:4646
+export NOMAD_ADDR=34.250.234.108:4646 ##### UI IP address to access GUI
 
 nomad server members
 nomad node status
