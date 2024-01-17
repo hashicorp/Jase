@@ -253,7 +253,7 @@ sudo systemctl status consul
 create an anonymous_policy.hcl (need to be root -----> sudo su -) copy and run in the shell
 
 
-cat <<EOT > /root/anonymous_policy.hcl
+cat <<EOT > /consul/config/policies/anonymous_policy.hcl
 agent_prefix "" {
   policy = "read"
 }
