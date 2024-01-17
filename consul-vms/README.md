@@ -270,7 +270,7 @@ EOT
 
 consul acl policy create -name "anonymous-policy" \
   -description "This is the anonymous policy" \
-  -rules @/root/anonymous_policy.hcl
+  -rules @/consul/config/policies/anonymous_policy.hcl
 
 consul acl token update \
   -id anonymous \
