@@ -95,7 +95,7 @@ curl -L -o cni-plugins.tgz "https://github.com/containernetworking/plugins/relea
 nomad --version
 ```
 ```
-nomad.hcl file
+### nomad.hcl file - dont forget to create a nomad.hclic license file
 
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: BUSL-1.1
