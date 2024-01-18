@@ -33,6 +33,7 @@ consul {
   address = "172.31.28.218:8500"
 #  token   = "df179fd2-3211-3641-5901-a57331c14611"
   token   = "8e29317f-2f48-138b-665f-71054ade9dbe"
+}  
 
 service_identity {
     aud = ["consul.io"]
