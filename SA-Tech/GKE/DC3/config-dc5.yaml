@@ -1,0 +1,132 @@
+global:
+  enabled: true
+  name: consul-gke1
+  domain: consul
+  apiVersion: v2
+  datacenter: dc5
+  image: hashicorp/consul-enterprise:1.15.3-ent
+  imageEnvoy: "envoyproxy/envoy-alpine:v1.25.1"
+  imageConsulDataplane: "hashicorp/consul-dataplane:1.1.0"
+  logLevel: "debug"
+
+  enterpriseLicense:
+    secretName: consul-ent-license
+    secretKey: key
+
+  dns:
+    enabled: true
+    enableRedirection: true 
+  
+  adminPartitions:
+    enabled: true
+    name: "default"
+    # name above is the partition name for servers to reside 	
+    service:
+
+  enableConsulNamespaces: true
+
+  peering:
+    enabled: true
+
+  tls:
+    enabled: true
+    enableAutoEncrypt: true
+    verify: true
+
+  acls:
+   manageSystemACLs: true
+
+server:
+  replicas: 3  # 1 for MiniKube or small environments
+  bootstrapExpect: 3 # 1 for as above environment
+  connect: true
+  enabled: true
+  exposeGossipAndRPCPorts: true
+  metrics:
+    enabled: true
+    enableAgentMetrics: true
+    agentMetricsRetentionTime: '1m'
+    enableGatewayMetrics: true
+
+
+connectInject:
+  enabled: true
+  default: true                 
+  transparentProxy:
+    defaultEnabled: true         # Default
+  cni:
+    enabled: true
+  consulNamespaces:
+    consulDestinationNamespace: "default"   # Ignored when mirroringK8S is true
+    mirroringK8S: true
+#   mirroringK8SPrefix: ""
+  metrics:
+    defaultEnabled: true
+    defaultEnableMerging: false  
+#    defaultPrometheusScrapePort: 20200
+#    defaultPrometheusScrapePath: "/metrics"
+#    defaultMergedMetricsPort: 20100
+
+apiGateway:
+    enabled: true
+    image: hashicorp/consul-api-gateway:0.5.2
+    logLevel: debug
+    managedGatewayClass:
+    enabled: true
+    serviceType: LoadBalancer
+
+terminatingGateways:
+  enabled: true
+  gateways:
+    - name: terminating-gateway
+#      extraVolumes:
+#      - type: secret
+#        name: my-secret
+#        items: # optional items array
+#          - key: key
+#            path: rds-combined-ca-bundle.pem # secret will now mount to /consul/userconfig/my-secret/path
+
+
+
+ingressGateways:
+  enabled: true
+  gateways:
+    - name: ingress-gateway
+      service:
+        type: 'LoadBalancer'
+        ports:
+          - port: 8080
+
+  wanAddress:
+    source: Service
+#       annotations: |
+#         'service.beta.kubernetes.io/aws-load-balancer-internal': "false"
+
+meshGateway:
+  enabled: true
+  replicas: 1
+# service:
+#   enabled: true
+#   type: 'LoadBalancer'
+# wanAddress:
+#   source: Service
+#       annotations: |
+#         'service.beta.kubernetes.io/aws-load-balancer-internal': "false"
+
+controller:
+  enabled: true
+
+ui:
+  enabled: true
+  metrics:
+    enabled: true # by default, this inherits from the value global.metrics.enabled
+#    dashboardURLTemplates:
+#        service: "https://dcr22597.live.dynatrace.com/ui/kubernetes?gtf=-2h&gf=all&entitySelector="
+    provider: "prometheus"
+    baseURL: http://prometheus-server
+  service:
+    enabled: true
+    type: LoadBalancer
+
+prometheus:
+ enabled: true
