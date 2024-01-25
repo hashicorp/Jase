@@ -4,7 +4,7 @@ global:
   domain: consul
   apiVersion: v2
   datacenter: dc5
-  image: hashicorp/consul-enterprise:1.15.3-ent
+  image: hashicorp/consul-enterprise:1.17.1-ent
   imageEnvoy: "envoyproxy/envoy-alpine:v1.25.1"
   imageConsulDataplane: "hashicorp/consul-dataplane:1.1.0"
   logLevel: "debug"
