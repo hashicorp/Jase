@@ -5,6 +5,3 @@ metadata:
 spec:
   meshGateway:
     mode: local
-  config:
-    protocol: http
-
