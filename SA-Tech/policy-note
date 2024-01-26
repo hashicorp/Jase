@@ -1,0 +1,32 @@
+Policy for connect-inject policy needs to have esculated prvilieges to allow cross AP connectivity for counting failover..... 
+
+'''
+kubectl get serviceresolvers
+'''
+
+you will see that the sync failed, due to not having ACL priviliges for counting to cross communicate.
+
+'''
+partition "default" {
+  mesh = "write"
+  acl = "write"
+  peering = "write"
+  node_prefix "" {
+    policy = "write"
+  }
+  namespace_prefix "" {
+    policy = "write"
+    acl = "write"
+    service_prefix "" {
+      policy = "write"
+      intentions = "write"
+    }
+    identity_prefix "" {
+      policy = "write"
+      intentions = "write"
+    }
+  }
+}
+'''
+
+
