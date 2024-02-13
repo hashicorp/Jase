@@ -7,7 +7,9 @@ Run `vagrant up` this will deploy a local VM and the 1.4 version of Nomad.
 
 ```
 # Set the address (this is the default but you may have it set elsewhere)
-export NOMAD_ADDR=http://localhost:4646
+export NOMAD_ADDR=http://172.31.23.85:4646
+export NOMAD_TOKEN=a5a472af-fe85-2701-7708-d6e0e0622f15
+
 ```
 
 ### Lets deploy a load balancer
