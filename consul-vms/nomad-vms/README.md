@@ -28,10 +28,12 @@ Node Identities:
 consul acl set-agent-token agent <SecretID> AS ABOVE line 14
 
 ACL token "agent" set successfully
+```
 
 ### Create a file named consul-policy-nomad-agents.hcl to store the Consul ACL rules that grant the necessary permissions to Nomad agents. 
 ### Add the following contents to it and save the file
 
+```
 consul-policy-nomad-agents.hcl
 
 agent_prefix "" {
@@ -45,9 +47,11 @@ node_prefix "" {
 service_prefix "" {
   policy = "write"
 }
+```
 
 ### Create a Consul ACL policy named nomad-agents with the rules defined in the consul-policy-nomad-agents.hcl file
 
+```
 consul acl policy create -name 'nomad-agents' -description 'Policy for Nomad agents' -rules '@consul-policy-nomad-agents.hcl'
 ID:           7a0fe00b-f7e6-809c-2227-bb0638b873bd
 Name:         nomad-agents
@@ -66,8 +70,8 @@ service_prefix "" {
   policy = "write"
 }
 
-
-
+```
+```
 consul acl token create -policy-name 'nomad-agents'
 AccessorID:       3f436657-823a-95e3-4755-79f3e1e43c8e
 SecretID:         df179fd2-3211-3641-5901-a57331c14611
@@ -96,12 +100,12 @@ CNI Plugins
 curl -L -o cni-plugins.tgz "https://github.com/containernetworking/plugins/releases/download/v1.0.0/cni-plugins-linux-$( [ $(uname -m) = aarch64 ] && echo arm64 || echo amd64)"-v1.0.0.tgz && \
   sudo mkdir -p /opt/cni/bin && \
   sudo tar -C /opt/cni/bin -xzf cni-plugins.tgz
-
-
 ```
+
 ```
 nomad --version
 ```
+
 ```
 ### nomad.hcl file - dont forget to create a nomad.hclic license file
 
@@ -195,6 +199,7 @@ export NOMAD_ADDR=http://172.31.30.79:4646 ##### UI IP address to access GUI
 
 nomad server members
 nomad node status
+```
 
 Nomad client
 
