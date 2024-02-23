@@ -7,6 +7,10 @@ NOMAD Integration into Consul POC Guide
 
 ![Alt text](image-1.png)
 
+```
+Once you have setup consul & Nomad server which i have provided in th consulvm repo folders
+```
+
 STEP 1 - Setup ACL & Policies on Consul server VM first
 
 ```
@@ -77,7 +81,9 @@ Policies:
 
 ```
 
-Install Nomad client
+
+
+Install Nomad client, docker (do not install snap version)
 Install Nomad Binary &  plus toolsets Debian-based instructions:
 
 ```
@@ -190,6 +196,169 @@ export NOMAD_ADDR=http://172.31.30.79:4646 ##### UI IP address to access GUI
 nomad server members
 nomad node status
 
+Nomad client
+
+Configure Consul for services workload identities
+Create a Consul ACL JWT auth method
 
 ```
+vi consul-auth-method-nomad-workloads.json
+
+{
+  "JWKSURL": "http://172.31.30.79:4646/.well-known/jwks.json",
+  "JWTSupportedAlgs": ["RS256"],
+  "BoundAudiences": ["consul.io"],
+  "ClaimMappings": {
+    "nomad_namespace": "nomad_namespace",
+    "nomad_job_id": "nomad_job_id",
+    "nomad_task": "nomad_task",
+    "nomad_service": "nomad_service"
+  }
+}
+
+```
+
+```
+consul acl auth-method create -name 'nomad-workloads' -type 'jwt' -description 'JWT auth method for Nomad services and workloads' -config '@consul-auth-method-nomad-workloads.json'
+
+```
+
+Create a Consul ACL binding rule for Nomad services
+
+```
+consul acl binding-rule create -method 'nomad-workloads' -description 'Binding rule for services registered from Nomad' -bind-type 'service' -bind-name '${value.nomad_service}' -selector '"nomad_service" in value'
+```
+
+Run a Nomad job to register a service in Consul
+
+```
+vi httpd.nomad.hcl
+
+
+job "httpd" {
+  group "httpd" {
+    network {
+      port "http" {}
+    }
+
+    service {
+      provider = "consul"
+      name     = "httpd"
+      port     = "http"
+    }
+
+    task "httpd" {
+      driver = "docker"
+
+      config {
+        image   = "busybox:1.36"
+        command = "httpd"
+        args    = ["-f", "-p", "${NOMAD_PORT_http}"]
+        ports   = ["http"]
+      }
+    }
+  }
+}
+```
+
+```
+nomad job run 'httpd.nomad.hcl'
+
+nomad job inspect -t '{{sprig_toPrettyJson (index .TaskGroups 0).Services}}' 'httpd'
+
+```
+
+
+Consul server - Configure Consul for tasks workload identities
+
+Create a Consul ACL binding rule for Nomad tasks
+Create a binding rule to map ACL tokens from the nomad-workloads auth method to ACL roles with names that match the pattern nomad-tasks-${value.nomad_namespace}.
+
+```
+consul acl binding-rule create -method 'nomad-workloads' -description 'Binding rule for Nomad tasks' -bind-type 'role' -bind-name 'nomad-tasks-${value.nomad_namespace}' -selector '"nomad_service" not in value'
+```
+
+The value of ${value.nomad_namespace} is dynamically set to the Nomad namespace of the workload requesting the Consul token. You can also use other values from the auth method ClaimMappings, such as nomad_job_id and nomad_task for more fine-grained mapping of roles.
+
+The -selector '"nomad_service" not in value' flag ensures this rule only applies to workload identities that are not used for service registration because they do not have the nomad_service claim.
+
+Create a Consul ACL policy for Nomad tasks
+Create a file named consul-policy-nomad-tasks.hcl. Add the following contents to it and save the file. This policy allows tokens to access any service and KV path in Consul. In production environments, you should adjust the policy should to meet specific access requirements.
+
+```
+vi consul-policy-nomad-tasks.hcl
+
+key_prefix "" {
+  policy = "read"
+}
+
+service_prefix "" {
+  policy = "read"
+}
+```
+
+Create a Consul ACL role for Nomad tasks
+Create a Consul ACL role named nomad-tasks-default that matches the name pattern for jobs in the default namespace using the rules set in the file consul-policy-nomad-tasks.hcl.
+
+```
+consul acl role create -name 'nomad-tasks-default' -description 'ACL role for Nomad tasks in the default Nomad namespace' -policy-name 'nomad-tasks'
+
+```
+
+Run a Nomad job to read data from Consul
+Write test data to Consul's KV store.
+
+```
+consul kv put 'httpd/config/cache' '50'; consul kv put 'httpd/config/maxconn' '100'; consul kv put 'httpd/config/minconn' '3'
+```
+
+```
+vi consul-info.nomad.hcl
+
+job "consul-info" {
+  type = "batch"
+
+  group "consul-info" {
+    task "consul-info" {
+      driver = "docker"
+
+      consul {}
+
+      config {
+        image   = "busybox:1.36"
+        command = "/bin/sh"
+        args    = ["-c", "exit 0"]
+      }
+
+      template {
+        data        = <<EOF
+Consul Services:
+{{- range services}}
+  * {{.Name}}{{end}}
+
+Consul KV for "httpd/config":
+{{- range ls "httpd/config"}}
+  * {{.Key}}: {{.Value}}{{end}}
+EOF
+        destination = "local/consul-info.txt"
+      }
+    }
+  }
+}
+
+```
+
+```
+nomad job run 'consul-info.nomad.hcl'
+
+nomad job allocs 'consul-info'
+
+nomad alloc fs "$(nomad job allocs -t '{{with index . 0}}{{.ID}}{{end}}' 'consul-info')" 'consul-info/local/consul-info.txt'
+
+nomad job inspect -t '{{sprig_toPrettyJson (index (index .TaskGroups 0).Tasks 0)}}' 'consul-info'
+```
+
+
+GOD JOB....... AL DONE 😁😁😁😁😁😁😁😁
+
 
