@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 datacenter = "dc1"
 data_dir = "c:/consul/config/data"
 encrypt = "Aej87Duj7rnoIogDACrP0A=="
