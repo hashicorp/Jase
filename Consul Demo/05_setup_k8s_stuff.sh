@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 
 kubectl create namespace base
 #kubectl apply -f resources/k8s-yamls/example.yaml -n base

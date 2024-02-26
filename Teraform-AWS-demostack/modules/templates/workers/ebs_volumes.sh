@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 echo "--> Configuring EBS mounts"
 
 export NOMAD_ADDR=https://localhost:4646

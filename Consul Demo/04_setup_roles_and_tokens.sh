@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 
 export CONSUL_HTTP_TOKEN=`kubectl get secrets/consul-bootstrap-acl-token --template='{{.data.token | base64decode }}' -n consul`
 

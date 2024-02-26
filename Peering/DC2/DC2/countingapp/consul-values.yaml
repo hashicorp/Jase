@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 global:
   image: "hashicorp/consul:1.14.0"
 #  image: "hashicorppreview/consul:1.14-dev"
