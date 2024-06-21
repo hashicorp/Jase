@@ -3,8 +3,8 @@ global:
   name: consul
   apiVersion: v2
   datacenter: dc2
-  image: hashicorp/consul-enterprise:1.16.1-ent
-  imageConsulDataplane: "hashicorp/consul-dataplane:1.2.1"
+  image: hashicorp/consul-enterprise:1.18.2-ent
+  imageConsulDataplane: "hashicorp/consul-dataplane:1.4.3"
   # imageEnvoy: "envoyproxy/envoy-alpine:v1.25.6"   # Pulls the latest supported when unspecified.
   logLevel: "debug"
 
