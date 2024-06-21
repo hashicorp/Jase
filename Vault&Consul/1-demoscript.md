@@ -117,7 +117,7 @@ vault write auth/kubernetes/role/consul-ca \
     policies=ca-policy\
     ttl=1h
 ```
-7. (the bellow assumes you have the enterprise license pre created as a secret)
+7. (the below assumes you have the enterprise license pre created as a secret)
 run 
 ```
 helm install -n consul -f consul-values.yaml --debug --wait consul hashicorp/consul
