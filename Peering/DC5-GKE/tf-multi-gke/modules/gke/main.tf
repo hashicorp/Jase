@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # data "google_service_account" "owner_project" {
 #   account_id = var.service_account
 # }

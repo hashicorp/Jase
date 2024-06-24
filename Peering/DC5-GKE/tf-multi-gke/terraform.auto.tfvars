@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 gcp_region = "europe-west1"
 gcp_project = "hc-a2fdf5e57a134960a608bf7e9ce"
 node_type = "n1-standard-2"

@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 
 # DocDB Subnet Group
 resource "aws_docdb_subnet_group" "example_docdb_subnet_group" {
