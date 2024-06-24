@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
   namespace "default" {
     key_prefix "" {
       policy = "deny"

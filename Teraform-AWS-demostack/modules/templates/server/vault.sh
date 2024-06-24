@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 echo "==> Vault (server)"
 # Vault expects the key to be concatenated with the CA
 sudo mkdir -p /etc/vault.d/tls/

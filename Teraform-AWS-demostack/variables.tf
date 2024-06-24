@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 /*
 data "http" "myipaddr" {
   url = "http://ipv4.icanhazip.com"

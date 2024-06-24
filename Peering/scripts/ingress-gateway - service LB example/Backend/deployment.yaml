@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # This file configures the hello-world app which serves public web traffic.
 apiVersion: apps/v1
 kind: Deployment

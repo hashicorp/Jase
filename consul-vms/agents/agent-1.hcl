@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # this will create the node & register in consul ready  for the service to run on
 
 node_name = "client-dc1-alpha"
